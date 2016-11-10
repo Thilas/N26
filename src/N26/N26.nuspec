@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2016/06/nuspec.xsd">
+  <metadata>
+    <id>wenz.N26</id>
+    <version>$id$</version>
+    <authors>Steffen Wenz</authors>
+    <owners>swenz</owners>
+    <licenseUrl>https://github.com/swenz/N26/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://www.wenz.io</projectUrl>
+    <iconUrl>http://github.com/contoso/UsefulStuff/nuget_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes>Bug fixes and performance improvements</releaseNotes>
+    <description>Core utility functions for web applications</description>
+    <copyright>Copyright ©2016 Contoso Corporation</copyright>
+    <tags>N26</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="9.0" />
+    </dependencies>
+  </metadata>
+</package>
