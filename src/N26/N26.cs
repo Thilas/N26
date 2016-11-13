@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using N26.Models;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace N26
 {
@@ -14,13 +16,16 @@ namespace N26
         string api = "https://api.tech26.de";
         string N26token = string.Empty;
 
-        public async void Login(string username, string password)
+        public async Task Login(string username, string password)
         {
-            var v = new { username = username, password = password, grant_type = "password", Authorization = "Basic " + bearer };
-
             var client = new HttpClient();
-            var content = new StringContent(JsonConvert.SerializeObject(v));
-
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", bearer);
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password),
+                new KeyValuePair<string, string>("grant_type", "password")
+            });
             var result = await client.PostAsync("https://api.tech26.de/oauth/token", content);
             string str = await result.Content.ReadAsStringAsync();
             var response = JsonConvert.DeserializeObject<Token>(str);
@@ -68,55 +73,40 @@ namespace N26
             //                //    });
         }
 
-        //            public Me me()
-        //            {
-        //                var client = new RestClient(api);
-        //                var request = new RestRequest("/api/me");
-        //                request.AddHeader("Authorization", "bearer " + N26token);
+        public async Task<Me> Me()
+        {
+            return await Get<Me>("https://api.tech26.de/api/me");
+        }
 
-        //                IRestResponse<Me> response = client.Get<Me>(request);
-        //                return response.Data;
-        //            }
+        public async Task<Accounts> GetAccounts()
+        {
+            return await Get<Accounts>("https://api.tech26.de/api/accounts");
+        }
 
-        //            public Accounts GetAccounts()
-        //            {
-        //                var client = new RestClient(api);
-        //                var request = new RestRequest("/api/accounts");
-        //                request.AddHeader("Authorization", "bearer " + N26token);
+        public async Task<Transactions> GetTransactions()
+        {
+            return await Get<Transactions>("https://api.tech26.de/api/transactions");
+        }
 
-        //                IRestResponse<Accounts> response = client.Get<Accounts>(request);
-        //                return response.Data;
-        //            }
+        public async Task<Cards> GetCards()
+        {
+            return await Get<Cards>("https://api.tech26.de/api/cards");
+        }
 
-        //            public Transactions GetTransactions()
-        //            {
-        //                var client = new RestClient(api);
-        //                var request = new RestRequest("/api/transactions?sort=visibleTS&dir=DESC&limit=50");
-        //                request.AddHeader("Authorization", "bearer " + N26token);
-        //                IRestResponse<Transactions> response = client.Get<Transactions>(request);
-        //                return response.Data;
-        //            }
+        public async Task<Addresses> GetAddresses()
+        {
+            return await Get<Addresses>("https://api.tech26.de/api/addresses");
+        }
 
-        //            public Cards GetCards()
-        //            {
-        //                var client = new RestClient(api);
-        //                var request = new RestRequest("/api/cards");
-        //                request.AddHeader("Authorization", "bearer " + N26token);
+        public async Task<T> Get<T>(string requestUri)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", N26token);
 
-        //                IRestResponse<Cards> response = client.Get<Cards>(request);
-        //                return response.Data;
-
-        //            }
-
-        //            public Addresses GetAddresses()
-        //            {
-        //                var client = new RestClient(api);
-        //                var request = new RestRequest("/api/addresses");
-        //                request.AddHeader("Authorization", "bearer " + N26token);
-        //                IRestResponse<Addresses> response = client.Get<Addresses>(request);
-        //                return response.Data;
-        //            }
-
-        //        }
+            var result = await client.GetAsync(requestUri);
+            string str = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<T>(str);
+            return response;
+        }
     }
 }
