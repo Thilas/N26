@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace N26.Models
+﻿namespace N26.Models
 {
+    public enum AddressType { Passport, Shipping }
+
     public class Address
     {
-        public string addressLine1 { get; set; }
-        public string streetName { get; set; }
-        public string houseNumberBlock { get; set; }
-        public string zipCode { get; set; }
-        public string cityName { get; set; }
-        public string countryName { get; set; }
-        public string type { get; set; }
-        public string id { get; set; }
+        public string AddressLine1 { get; set; }
+        public string StreetName { get; set; }
+        public string HouseNumberBlock { get; set; }
+        public string ZipCode { get; set; }
+        public string CityName { get; set; }
+        public string CountryName { get; set; }
+        public AddressType Type { get; set; }
+        public string Id { get; set; }
     }
 }

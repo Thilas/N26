@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace N26.Models
 {
     public class Token
     {
-        public string access_token { get; set; }
-        public string token_type { get; set; }
-        public string refresh_token { get; set; }
-        public int expires_in { get; set; }
-        public string scope { get; set; }
+        [JsonProperty("access_token")]
+        public string AccessToken { get; internal set; }
+        [JsonProperty("token_type")]
+        public string TokenType { get; internal set; }
+        [JsonProperty("refresh_token")]
+        public string RefreshToken { get; internal set; }
+        [JsonProperty("expires_in")]
+        internal int _expiresIn { get; set; }
+        public TimeSpan ExpiresIn => TimeSpan.FromSeconds(_expiresIn);
+        public string Scope { get; set; }
     }
 }

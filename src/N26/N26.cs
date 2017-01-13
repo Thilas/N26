@@ -1,112 +1,89 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using N26.Models;
-using System.Net.Http.Headers;
-using System.Text;
+using N26.Queryables;
+using N26.Queryables.Transactions;
+using Newtonsoft.Json;
 
 namespace N26
 {
     public class N26
     {
-        string bearer = "YW5kcm9pZDpzZWNyZXQ=";
-        string api = "https://api.tech26.de";
-        string N26token = string.Empty;
+        public static Uri ApiBaseUri => new Uri("https://api.tech26.de");
 
-        public async Task Login(string username, string password)
+        private const string AccountsRelativeUri = "api/accounts";
+        private const string AddressesRelativeUri = "api/addresses";
+        private const string CardsRelativeUri = "api/v2/cards";
+        private const string MeRelativeUri = "api/me";
+        private const string TransactionsRelativeUri = "api/smrt/transactions";
+
+        public static async Task<N26> LoginAsync(string username, string password)
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", bearer);
-            var content = new FormUrlEncodedContent(new[]
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+            if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
+            const string Bearer = "bXktdHJ1c3RlZC13ZHBDbGllbnQ6c2VjcmV0";
+            using (var client = new HttpClient())
             {
-                new KeyValuePair<string, string>("username", username),
-                new KeyValuePair<string, string>("password", password),
-                new KeyValuePair<string, string>("grant_type", "password")
-            });
-            var result = await client.PostAsync("https://api.tech26.de/oauth/token", content);
-            string str = await result.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<Token>(str);
-            N26token = response.access_token;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Bearer);
+                var content = new FormUrlEncodedContent(new Dictionary<string, string>()
+                {
+                    { "username", username },
+                    { "password", password },
+                    { "grant_type", "password" }
+                });
+                using (var response = await client.PostAsync(new Uri(ApiBaseUri, "oauth/token"), content))
+                {
+                    var contentString = await response.Content.ReadAsStringAsync();
+                    var token = JsonConvert.DeserializeObject<Token>(contentString);
+                    var result = new N26(token);
+                    return result;
+                }
+            }
         }
 
-        public void transaction(string pin, string bic, string amount, string iban, string name, string referenceText)
+        public Token Token { get; }
+
+        private readonly Func<Task<IEnumerable<Address>>> _addressesFactoryAsync;
+        private readonly Func<Task<IEnumerable<Card>>> _cardsFactoryAsync;
+        private readonly Func<string, Task<IEnumerable<Transaction>>> _transactionsFactoryAsync;
+
+        public N26Set<Address> Addresses { get; }
+        public N26Set<Card> Cards { get; }
+        public N26Set<Transaction> Transactions { get; }
+
+        private N26(Token token)
         {
-            //                //    var bearer = localStorage.getItem('N26token');
-            //                //    var pin = $('#pin').val() || $('#pin').data('value') || $('#pin').text();
-            //                //    var iban = $('#iban').val() || $('#iban').data('value') || $('#iban').text();
-            //                //    var bic = $('#bic').val() || $('#bic').data('value') || $('#bic').text();
-            //                //    var amount = $('#amount').val() || $('#amount').data('value') || $('#amount').text();
-            //                //    var name = $('#name').val() || $('#name').data('value') || $('#name').text();
-            //                //    var reference = $('#reference').val() || $('#reference').data('value') || $('#reference').text();
-
-            //                //    amount = parseFloat(amount).toFixed(2);
-
-            //                //$.ajax({
-            //                //    type: 'POST',
-            //                //    url: api + '/api/transactions',
-            //                //    dataType: 'json',
-            //                //    data: JSON.stringify({
-            //                //            'pin': pin,
-            //                //        'transaction': {
-            //                //                "partnerBic": bic,
-            //                //            "amount": amount,
-            //                //            "type": "DT",
-            //                //            "partnerIban": iban,
-            //                //            "partnerName": name,
-            //                //            "referenceText": reference
-            //                //        }
-            //                //        }),
-            //                //    beforeSend: function(xhr) {
-            //                //            xhr.setRequestHeader('Authorization', 'bearer ' + bearer);
-            //                //            xhr.setRequestHeader('Accept', 'application/json');
-            //                //            xhr.setRequestHeader('Content-Type', 'application/json');
-            //                //        },
-            //                //    success: function(data) {
-            //                //            console.log(data);
-            //                //        },
-            //                //    error: function(data) {
-            //                //            console.log(data);
-            //                //        }
-            //                //    });
+            Token = token ?? throw new ArgumentNullException(nameof(token));
+            _addressesFactoryAsync = async () => (await GetAsync<Collection<Address>>(AddressesRelativeUri)).Data;
+            _cardsFactoryAsync = async () => await GetAsync<Card[]>(CardsRelativeUri);
+            _transactionsFactoryAsync = async relativeUri => await GetAsync<Transaction[]>(relativeUri);
+            Addresses = new N26Set<Address>(new N26SetFactory<Address>(_addressesFactoryAsync));
+            Cards = new N26Set<Card>(new N26SetFactory<Card>(_cardsFactoryAsync));
+            Transactions = new N26Set<Transaction>(new TransactionFactory(_transactionsFactoryAsync, TransactionsRelativeUri));
         }
 
-        public async Task<Me> Me()
-        {
-            return await Get<Me>("https://api.tech26.de/api/me");
-        }
+        public async Task<Accounts> GetAccountsAsync() => await GetAsync<Accounts>(AccountsRelativeUri);
+        public async Task<IEnumerable<Address>> GetAddressesAsync() => await _addressesFactoryAsync();
+        public async Task<IEnumerable<Card>> GetCardsAsync() => await _cardsFactoryAsync();
+        public async Task<Me> GetMeAsync() => await GetAsync<Me>(MeRelativeUri);
+        public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await _transactionsFactoryAsync(TransactionsRelativeUri);
 
-        public async Task<Accounts> GetAccounts()
+        internal async Task<T> GetAsync<T>(string relativeUri)
         {
-            return await Get<Accounts>("https://api.tech26.de/api/accounts");
-        }
-
-        public async Task<Transactions> GetTransactions()
-        {
-            return await Get<Transactions>("https://api.tech26.de/api/transactions");
-        }
-
-        public async Task<Cards> GetCards()
-        {
-            return await Get<Cards>("https://api.tech26.de/api/cards");
-        }
-
-        public async Task<Addresses> GetAddresses()
-        {
-            return await Get<Addresses>("https://api.tech26.de/api/addresses");
-        }
-
-        public async Task<T> Get<T>(string requestUri)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", N26token);
-
-            var result = await client.GetAsync(requestUri);
-            string str = await result.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<T>(str);
-            return response;
+            if (string.IsNullOrEmpty(relativeUri)) throw new ArgumentNullException(nameof(relativeUri));
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Token.TokenType, Token.AccessToken);
+                using (var response = await client.GetAsync(new Uri(ApiBaseUri, relativeUri)))
+                {
+                    var contentString = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<T>(contentString);
+                    return result;
+                }
+            }
         }
     }
 }
