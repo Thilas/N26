@@ -7,6 +7,7 @@ using N26.Models;
 using N26.Queryables;
 using N26.Queryables.Transactions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace N26
 {
@@ -20,9 +21,9 @@ namespace N26
         private const string MeRelativeUri = "api/me";
         private const string TransactionsRelativeUri = "api/smrt/transactions";
 
-        public static async Task<N26> LoginAsync(string username, string password)
+        public static async Task<N26> LoginAsync(string userName, string password)
         {
-            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+            if (string.IsNullOrEmpty(userName)) throw new ArgumentNullException(nameof(userName));
             if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
             const string Bearer = "bXktdHJ1c3RlZC13ZHBDbGllbnQ6c2VjcmV0";
             using (var client = new HttpClient())
@@ -30,14 +31,22 @@ namespace N26
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Bearer);
                 var content = new FormUrlEncodedContent(new Dictionary<string, string>()
                 {
-                    { "username", username },
+                    { "username", userName },
                     { "password", password },
                     { "grant_type", "password" }
                 });
                 using (var response = await client.PostAsync(new Uri(ApiBaseUri, "oauth/token"), content))
                 {
                     var contentString = await response.Content.ReadAsStringAsync();
-                    var token = JsonConvert.DeserializeObject<Token>(contentString);
+                    var json = JObject.Parse(contentString);
+                    var oldScope = json.GetValue(nameof(Models.Token.Scope), StringComparison.OrdinalIgnoreCase);
+                    if (oldScope?.Type == JTokenType.String)
+                    {
+                        var newScope = oldScope.DeepClone();
+                        newScope = newScope.ToString().Replace(' ', ',');
+                        oldScope.Replace(newScope);
+                    }
+                    var token = json.ToObject<Token>();
                     var result = new N26(token);
                     return result;
                 }
@@ -76,7 +85,7 @@ namespace N26
             if (string.IsNullOrEmpty(relativeUri)) throw new ArgumentNullException(nameof(relativeUri));
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Token.TokenType, Token.AccessToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Token.TokenType.ToString(), Token.AccessToken.ToString());
                 using (var response = await client.GetAsync(new Uri(ApiBaseUri, relativeUri)))
                 {
                     var contentString = await response.Content.ReadAsStringAsync();
