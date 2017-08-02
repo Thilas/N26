@@ -82,8 +82,10 @@ namespace N26.Queryables
             public PredicateVisitor(Func<MethodCallExpression, Expression> getNextExpression,
                                     Func<MethodCallExpression, Expression> getPredicateExpression)
             {
-                _getNextExpression = getNextExpression ?? throw new ArgumentNullException(nameof(getNextExpression));
-                _getPredicateExpression = getPredicateExpression ?? throw new ArgumentNullException(nameof(getPredicateExpression));
+                Guard.IsNotNull(getNextExpression, nameof(getNextExpression));
+                Guard.IsNotNull(getPredicateExpression, nameof(getPredicateExpression));
+                _getNextExpression = getNextExpression;
+                _getPredicateExpression = getPredicateExpression;
             }
 
             protected override Expression GetNextExpression(MethodCallExpression expression) => _getNextExpression(expression);

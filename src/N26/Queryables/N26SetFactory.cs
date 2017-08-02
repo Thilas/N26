@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using N26.Helpers;
 
 namespace N26.Queryables
 {
-    public abstract class N26SetFactory
+    internal abstract class N26SetFactory
     {
-        internal abstract Task<object> GetAsync(Expression expression);
+        public abstract Task<object> GetAsync(Expression expression);
     }
 
-    public class N26SetFactory<T> : N26SetFactory
+    internal class N26SetFactory<T> : N26SetFactory
     {
         private readonly Func<Expression, Task<IEnumerable<T>>> _factoryAsync;
 
@@ -19,9 +20,10 @@ namespace N26.Queryables
 
         protected N26SetFactory(Func<Expression, Task<IEnumerable<T>>> factoryAsync)
         {
-            _factoryAsync = factoryAsync ?? throw new ArgumentNullException(nameof(factoryAsync));
+            Guard.IsNotNull(factoryAsync, nameof(factoryAsync));
+            _factoryAsync = factoryAsync;
         }
 
-        internal override async Task<object> GetAsync(Expression expression) => await _factoryAsync(expression);
+        public override async Task<object> GetAsync(Expression expression) => await _factoryAsync(expression);
     }
 }

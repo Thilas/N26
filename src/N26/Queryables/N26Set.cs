@@ -3,31 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
+using JetBrains.Annotations;
+using N26.Helpers;
 
 namespace N26.Queryables
 {
     public class N26Set<TEntity> : IQueryable<TEntity>
     {
-        public N26Set(N26SetFactory setFactory)
+        internal N26Set(N26SetFactory setFactory)
         {
+            Guard.IsNotNull(setFactory, nameof(setFactory));
             Provider = new N26Provider(setFactory);
             Expression = Expression.Constant(this);
         }
 
         internal N26Set(N26Provider provider, Expression expression)
         {
-            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            if (!typeof(IQueryable<TEntity>).IsAssignableFrom(expression.Type)) throw new ArgumentOutOfRangeException(nameof(expression));
+            Guard.IsNotNull(provider, nameof(provider));
+            Guard.IsNotNull(expression, nameof(expression));
+            Guard.IsAssignableTo<IQueryable<TEntity>>(expression.Type, nameof(expression));
+            Provider = provider;
+            Expression = expression;
         }
 
+        [NotNull]
         public IQueryProvider Provider { get; }
+        [NotNull]
         public Expression Expression { get; }
 
+        [NotNull]
         public Type ElementType => typeof(TEntity);
 
+        [NotNull, ItemNotNull]
         public IEnumerator<TEntity> GetEnumerator() => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
+        [NotNull, ItemNotNull]
         IEnumerator IEnumerable.GetEnumerator() => (Provider.Execute<IEnumerable>(Expression)).GetEnumerator();
     }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using N26.Helpers;
 using N26.Models;
 using N26.Queryables;
 using N26.Queryables.Transactions;
@@ -13,6 +15,7 @@ namespace N26
 {
     public class N26
     {
+        [NotNull]
         public static Uri ApiBaseUri => new Uri("https://api.tech26.de");
 
         private const string AccountsRelativeUri = "api/accounts";
@@ -21,10 +24,11 @@ namespace N26
         private const string MeRelativeUri = "api/me";
         private const string TransactionsRelativeUri = "api/smrt/transactions";
 
-        public static async Task<N26> LoginAsync(string userName, string password)
+        [NotNull]
+        public static async Task<N26> LoginAsync([NotNull] string userName, [NotNull] string password)
         {
-            if (string.IsNullOrEmpty(userName)) throw new ArgumentNullException(nameof(userName));
-            if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
+            Guard.IsNotNull(userName, nameof(userName));
+            Guard.IsNotNull(password, nameof(password));
             const string Bearer = "bXktdHJ1c3RlZC13ZHBDbGllbnQ6c2VjcmV0";
             using (var client = new HttpClient())
             {
@@ -53,19 +57,24 @@ namespace N26
             }
         }
 
+        [NotNull]
         public Token Token { get; }
 
         private readonly Func<Task<IEnumerable<Address>>> _addressesFactoryAsync;
         private readonly Func<Task<IEnumerable<Card>>> _cardsFactoryAsync;
         private readonly Func<string, Task<IEnumerable<Transaction>>> _transactionsFactoryAsync;
 
+        [NotNull, ItemNotNull]
         public N26Set<Address> Addresses { get; }
+        [NotNull, ItemNotNull]
         public N26Set<Card> Cards { get; }
+        [NotNull, ItemNotNull]
         public N26Set<Transaction> Transactions { get; }
 
         private N26(Token token)
         {
-            Token = token ?? throw new ArgumentNullException(nameof(token));
+            Guard.IsNotNull(token, nameof(token));
+            Token = token;
             _addressesFactoryAsync = async () => (await GetAsync<Collection<Address>>(AddressesRelativeUri)).Data;
             _cardsFactoryAsync = async () => await GetAsync<Card[]>(CardsRelativeUri);
             _transactionsFactoryAsync = async relativeUri => await GetAsync<Transaction[]>(relativeUri);
@@ -74,18 +83,29 @@ namespace N26
             Transactions = new N26Set<Transaction>(new TransactionFactory(_transactionsFactoryAsync, TransactionsRelativeUri));
         }
 
+        [NotNull]
         public async Task<Accounts> GetAccountsAsync() => await GetAsync<Accounts>(AccountsRelativeUri);
+        [NotNull, ItemNotNull]
         public async Task<IEnumerable<Address>> GetAddressesAsync() => await _addressesFactoryAsync();
+        [NotNull, ItemNotNull]
         public async Task<IEnumerable<Card>> GetCardsAsync() => await _cardsFactoryAsync();
+        [NotNull]
         public async Task<Me> GetMeAsync() => await GetAsync<Me>(MeRelativeUri);
+        [NotNull, ItemNotNull]
         public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await _transactionsFactoryAsync(TransactionsRelativeUri);
 
         internal async Task<T> GetAsync<T>(string relativeUri)
         {
-            if (string.IsNullOrEmpty(relativeUri)) throw new ArgumentNullException(nameof(relativeUri));
+            Guard.IsNotNullOrEmpty(relativeUri, nameof(relativeUri));
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Token.TokenType.ToString(), Token.AccessToken.ToString());
+#if DEBUG
+                if (string.Equals(relativeUri, TransactionsRelativeUri, StringComparison.OrdinalIgnoreCase))
+                {
+                    relativeUri = $"{relativeUri}?limit=1000";
+                }
+#endif
                 using (var response = await client.GetAsync(new Uri(ApiBaseUri, relativeUri)))
                 {
                     var contentString = await response.Content.ReadAsStringAsync();

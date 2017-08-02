@@ -19,8 +19,8 @@ namespace N26.Queryables.Transactions
             var transaction = new TransactionVisitor(expression);
             var parameters = new List<string>();
             if (!string.IsNullOrEmpty(transaction.Keyword)) parameters.Add($"textFilter={WebUtility.UrlEncode(transaction.Keyword)}");
-            if (transaction.DateFrom.HasValue) parameters.Add($"from={DateTimeHelper.ToJsDate(transaction.DateFrom.Value)}");
-            if (transaction.DateTo.HasValue) parameters.Add($"to={DateTimeHelper.ToJsDate(transaction.DateTo.Value)}");
+            if (transaction.DateFrom.HasValue) parameters.Add($"from={DateTimeHelper.ToJsDate(transaction.DateFrom).Value}");
+            if (transaction.DateTo.HasValue) parameters.Add($"to={DateTimeHelper.ToJsDate(transaction.DateTo).Value}");
             if (transaction.Category.HasValue) parameters.Add($"categories={transaction.Category.Value}");
             if (transaction.Limit.HasValue) parameters.Add($"limit={transaction.Limit.Value}");
             if (transaction.LastId.HasValue) parameters.Add($"lastId={transaction.LastId.Value}");

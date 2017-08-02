@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using N26.Helpers;
 using Newtonsoft.Json;
 
@@ -7,27 +8,54 @@ namespace N26.Models
     public enum TokenType { Bearer }
 
     [Flags]
-    public enum TokenScope { None, Read = 1 << 0, Trust = 1 << 1, Write = 1 << 2 }
+    public enum TokenScope { Read = 1 << 0, Trust = 1 << 1, Write = 1 << 2 }
 
-    public class Token
+    public class Token : IEquatable<Token>
     {
-        [JsonProperty("access_token")]
-        public Guid AccessToken { get; internal set; }
+        [NotNull]
+        public Guid AccessToken { get; }
+        [NotNull]
+        public TokenType TokenType { get; }
+        [NotNull]
+        public Guid RefreshToken { get; }
+        [NotNull]
+        public TimeSpan ExpiresIn { get; }
+        [NotNull]
+        public TokenScope Scope { get; }
 
-        [JsonProperty("token_type")]
-        public TokenType TokenType { get; internal set; }
-
-        [JsonProperty("refresh_token")]
-        public Guid RefreshToken { get; internal set; }
-
-        [JsonProperty("expires_in")]
-        internal int _expiresIn { get; set; }
-        public TimeSpan ExpiresIn
+        [JsonConstructor]
+        internal Token(Guid? access_token, TokenType? token_type, Guid? refresh_token, int? expires_in, TokenScope? scope)
         {
-            get { return TimeSpanHelper.FromSeconds(_expiresIn); }
-            set { _expiresIn = TimeSpanHelper.ToSeconds(value); }
+            Guard.IsNotNull(access_token, nameof(access_token));
+            Guard.IsNotNull(token_type, nameof(token_type));
+            Guard.IsNotNull(refresh_token, nameof(refresh_token));
+            Guard.IsNotNull(expires_in, nameof(expires_in));
+            Guard.IsNotNull(scope, nameof(scope));
+            AccessToken = access_token.Value;
+            TokenType = token_type.Value;
+            RefreshToken = refresh_token.Value;
+            ExpiresIn = TimeSpanHelper.FromSeconds(expires_in).Value;
+            Scope = scope.Value;
         }
 
-        public TokenScope Scope { get; set; }
+        [NotNull]
+        public override string ToString() => $"{TokenType}, {AccessToken}";
+
+        public override int GetHashCode() => AccessToken.GetHashCode();
+
+        public static bool operator ==(Token a, Token b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
+            return a.AccessToken == b.AccessToken;
+        }
+
+        public static bool operator !=(Token a, Token b) => !(a == b);
+
+        public static bool Equals(Token a, Token b) => a == b;
+
+        public override bool Equals(object obj) => Equals(obj as Token);
+
+        public bool Equals(Token other) => this == other;
     }
 }

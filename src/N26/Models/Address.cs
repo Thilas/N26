@@ -1,25 +1,77 @@
 ﻿using System;
+using JetBrains.Annotations;
+using N26.Helpers;
+using Newtonsoft.Json;
 
 namespace N26.Models
 {
     public enum AddressType { Legal, Passport, Shipping }
 
-    public class Address
+    public class Address : IEquatable<Address>
     {
-        public string AddressLine1 { get; set; }
+        [CanBeNull]
+        public string AddressLine1 { get; }
+        [NotNull]
+        public string StreetName { get; }
+        [NotNull]
+        public string HouseNumberBlock { get; }
+        [NotNull]
+        public string ZipCode { get; }
+        [NotNull]
+        public string CityName { get; }
+        [NotNull]
+        public string CountryName { get; }
+        [NotNull]
+        public AddressType Type { get; }
+        [NotNull]
+        public Guid Id { get; }
 
-        public string StreetName { get; set; }
+        [JsonConstructor]
+        internal Address(
+            string addressLine1,
+            string streetName,
+            string houseNumberBlock,
+            string zipCode,
+            string cityName,
+            string countryName,
+            AddressType? type,
+            Guid? id)
+        {
+            Guard.IsNotNullOrEmpty(streetName, nameof(streetName));
+            Guard.IsNotNullOrEmpty(houseNumberBlock, nameof(houseNumberBlock));
+            Guard.IsNotNullOrEmpty(zipCode, nameof(zipCode));
+            Guard.IsNotNullOrEmpty(cityName, nameof(cityName));
+            Guard.IsNotNullOrEmpty(countryName, nameof(countryName));
+            Guard.IsNotNull(type, nameof(type));
+            Guard.IsNotNull(id, nameof(id));
+            AddressLine1 = addressLine1;
+            StreetName = streetName;
+            HouseNumberBlock = houseNumberBlock;
+            ZipCode = zipCode;
+            CityName = cityName;
+            CountryName = countryName;
+            Type = type.Value;
+            Id = id.Value;
+        }
 
-        public string HouseNumberBlock { get; set; }
+        [NotNull]
+        public override string ToString() => $"{Type}, {CityName}";
 
-        public string ZipCode { get; set; }
+        public override int GetHashCode() => Id.GetHashCode();
 
-        public string CityName { get; set; }
+        public static bool operator ==(Address a, Address b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
+            return a.Id == b.Id;
+        }
 
-        public string CountryName { get; set; }
+        public static bool operator !=(Address a, Address b) => !(a == b);
 
-        public AddressType Type { get; set; }
+        public static bool Equals(Address a, Address b) => a == b;
 
-        public Guid Id { get; set; }
+        public override bool Equals(object obj) => Equals(obj as Address);
+
+        public bool Equals(Address other) => this == other;
     }
 }

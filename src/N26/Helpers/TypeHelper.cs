@@ -17,8 +17,9 @@ namespace N26.Helpers
 
         private static MethodInfo GetMethodInfo(LambdaExpression expression)
         {
+            Guard.IsNotNull(expression, nameof(expression));
             var outermostExpression = expression.Body as MethodCallExpression;
-            if (outermostExpression == null) throw new ArgumentException("Invalid Expression. Expression should consist of a Method call only.", nameof(expression));
+            Guard.IsValid(outermostExpression, nameof(expression), v => v != null, "Parameter must consist in a method call only.");
             return outermostExpression.Method;
         }
     }

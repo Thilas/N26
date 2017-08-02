@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using N26.Helpers;
 
 namespace N26.Tests
 {
@@ -22,18 +23,11 @@ namespace N26.Tests
         /// <param name="key">The key.</param>
         /// <param name="selector">The selector.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// testContext
-        /// or
-        /// key
-        /// or
-        /// selector
-        /// </exception>
         public static T GetPropertyValue<T>(this TestContext testContext, string key, Func<object, T> selector)
         {
-            if (testContext == null) throw new ArgumentNullException(nameof(testContext));
-            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            Guard.IsNotNull(testContext, nameof(testContext));
+            Guard.IsNotNullOrEmpty(key, nameof(key));
+            Guard.IsNotNull(selector, nameof(selector));
             if (!testContext.Properties.TryGetValue(key, out var value)) value = null;
             return selector(value);
         }
