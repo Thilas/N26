@@ -37,11 +37,11 @@ namespace N26.Models
             AddressType? type,
             Guid? id)
         {
-            Guard.IsNotNullOrEmpty(streetName, nameof(streetName));
-            Guard.IsNotNullOrEmpty(houseNumberBlock, nameof(houseNumberBlock));
-            Guard.IsNotNullOrEmpty(zipCode, nameof(zipCode));
-            Guard.IsNotNullOrEmpty(cityName, nameof(cityName));
-            Guard.IsNotNullOrEmpty(countryName, nameof(countryName));
+            Guard.IsNotNullNorEmpty(streetName, nameof(streetName));
+            Guard.IsNotNullNorEmpty(houseNumberBlock, nameof(houseNumberBlock));
+            Guard.IsNotNullNorEmpty(zipCode, nameof(zipCode));
+            Guard.IsNotNullNorEmpty(cityName, nameof(cityName));
+            Guard.IsNotNullNorEmpty(countryName, nameof(countryName));
             Guard.IsNotNull(type, nameof(type));
             Guard.IsNotNull(id, nameof(id));
             AddressLine1 = addressLine1;

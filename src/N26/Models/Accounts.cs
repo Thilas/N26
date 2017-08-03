@@ -38,9 +38,9 @@ namespace N26.Models
             Guard.IsNotNull(availableBalance, nameof(availableBalance));
             Guard.IsNotNull(usableBalance, nameof(usableBalance));
             Guard.IsNotNull(bankBalance, nameof(bankBalance));
-            Guard.IsNotNullOrEmpty(iban, nameof(iban));
-            Guard.IsNotNullOrEmpty(bic, nameof(bic));
-            Guard.IsNotNullOrEmpty(bankName, nameof(bankName));
+            Guard.IsNotNullNorEmpty(iban, nameof(iban));
+            Guard.IsNotNullNorEmpty(bic, nameof(bic));
+            Guard.IsNotNullNorEmpty(bankName, nameof(bankName));
             Guard.IsNotNull(seized, nameof(seized));
             Guard.IsNotNull(id, nameof(id));
             AvailableBalance = availableBalance.Value;

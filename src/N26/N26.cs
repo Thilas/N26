@@ -27,8 +27,8 @@ namespace N26
         [NotNull]
         public static async Task<N26> LoginAsync([NotNull] string userName, [NotNull] string password)
         {
-            Guard.IsNotNull(userName, nameof(userName));
-            Guard.IsNotNull(password, nameof(password));
+            Guard.IsNotNullNorEmpty(userName, nameof(userName));
+            Guard.IsNotNullNorEmpty(password, nameof(password));
             const string Bearer = "bXktdHJ1c3RlZC13ZHBDbGllbnQ6c2VjcmV0";
             using (var client = new HttpClient())
             {
@@ -96,7 +96,7 @@ namespace N26
 
         internal async Task<T> GetAsync<T>(string relativeUri)
         {
-            Guard.IsNotNullOrEmpty(relativeUri, nameof(relativeUri));
+            Guard.IsNotNullNorEmpty(relativeUri, nameof(relativeUri));
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Token.TokenType.ToString(), Token.AccessToken.ToString());

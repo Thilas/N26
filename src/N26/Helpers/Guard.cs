@@ -62,7 +62,7 @@ namespace N26.Helpers
         /// <param name="paramName">Name of the parameter.</param>
         /// <exception cref="ArgumentException">Parameter cannot be empty.</exception>
         /// <exception cref="ArgumentNullException">Parameter cannot be null.</exception>
-        public static void IsNotNullOrEmpty(string value, string paramName)
+        public static void IsNotNullNorEmpty(string value, string paramName)
         {
             IsNotNull(value, paramName);
             if (value.Length == 0)

@@ -70,19 +70,19 @@ namespace N26.Models
             string idNowToken)
         {
             Guard.IsNotNull(id, nameof(id));
-            Guard.IsNotNullOrEmpty(email, nameof(email));
-            Guard.IsNotNullOrEmpty(firstName, nameof(firstName));
-            Guard.IsNotNullOrEmpty(lastName, nameof(lastName));
-            Guard.IsNotNullOrEmpty(kycFirstName, nameof(kycFirstName));
-            Guard.IsNotNullOrEmpty(kycLastName, nameof(kycLastName));
+            Guard.IsNotNullNorEmpty(email, nameof(email));
+            Guard.IsNotNullNorEmpty(firstName, nameof(firstName));
+            Guard.IsNotNullNorEmpty(lastName, nameof(lastName));
+            Guard.IsNotNullNorEmpty(kycFirstName, nameof(kycFirstName));
+            Guard.IsNotNullNorEmpty(kycLastName, nameof(kycLastName));
             Guard.IsNotNull(gender, nameof(gender));
             Guard.IsNotNull(birthDate, nameof(birthDate));
             Guard.IsNotNull(signupCompleted, nameof(signupCompleted));
-            Guard.IsNotNullOrEmpty(nationality, nameof(nationality));
-            Guard.IsNotNullOrEmpty(mobilePhoneNumber, nameof(mobilePhoneNumber));
+            Guard.IsNotNullNorEmpty(nationality, nameof(nationality));
+            Guard.IsNotNullNorEmpty(mobilePhoneNumber, nameof(mobilePhoneNumber));
             Guard.IsNotNull(shadowUserId, nameof(shadowUserId));
             Guard.IsNotNull(transferWiseTermsAccepted, nameof(transferWiseTermsAccepted));
-            Guard.IsNotNullOrEmpty(idNowToken, nameof(idNowToken));
+            Guard.IsNotNullNorEmpty(idNowToken, nameof(idNowToken));
             Id = id.Value;
             Email = email;
             FirstName = firstName;

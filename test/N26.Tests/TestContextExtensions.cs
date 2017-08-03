@@ -26,7 +26,7 @@ namespace N26.Tests
         public static T GetPropertyValue<T>(this TestContext testContext, string key, Func<object, T> selector)
         {
             Guard.IsNotNull(testContext, nameof(testContext));
-            Guard.IsNotNullOrEmpty(key, nameof(key));
+            Guard.IsNotNullNorEmpty(key, nameof(key));
             Guard.IsNotNull(selector, nameof(selector));
             if (!testContext.Properties.TryGetValue(key, out var value)) value = null;
             return selector(value);

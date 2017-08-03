@@ -133,14 +133,14 @@ namespace N26.Models
 #if DEBUG
             if (publicToken != null) throw new NotImplementedException();
 #endif
-            Guard.IsNotNullOrEmpty(maskedPan, nameof(maskedPan));
+            Guard.IsNotNullNorEmpty(maskedPan, nameof(maskedPan));
             Guard.IsNotNull(expirationDate, nameof(expirationDate));
             Guard.IsNotNull(cardType, nameof(cardType));
             Guard.IsNotNull(status, nameof(status));
             Guard.IsNotNull(cardProductType, nameof(cardProductType));
             Guard.IsNotNull(pinDefined, nameof(pinDefined));
             Guard.IsNotNull(cardActivated, nameof(cardActivated));
-            Guard.IsNotNullOrEmpty(userNameOnCard, nameof(userNameOnCard));
+            Guard.IsNotNullNorEmpty(userNameOnCard, nameof(userNameOnCard));
 #if DEBUG
             if (exceetExpressCardDelivery != null) throw new NotImplementedException();
             if (membership != null) throw new NotImplementedException();

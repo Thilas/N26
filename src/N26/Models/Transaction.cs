@@ -130,7 +130,7 @@ namespace N26.Models
             Guard.IsNotNull(visibleTS, nameof(visibleTS));
             Guard.IsNotNull(recurring, nameof(recurring));
             Guard.IsNotNull(accountId, nameof(accountId));
-            Guard.IsNotNullOrEmpty(category, nameof(category));
+            Guard.IsNotNullNorEmpty(category, nameof(category));
             Guard.IsNotNull(userCertified, nameof(userCertified));
             Guard.IsNotNull(pending, nameof(pending));
             Guard.IsNotNull(transactionNature, nameof(transactionNature));
