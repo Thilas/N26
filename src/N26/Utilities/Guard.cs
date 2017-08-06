@@ -9,7 +9,7 @@ namespace N26.Utilities
     /// Common guards for argument validation.
     /// </summary>
     [DebuggerStepThrough]
-    public static class Guard
+    internal static class Guard
     {
         /// <summary>
         /// Ensures <typeparamref name="TFrom" /> is assignable to <typeparamref name="TTo" />.

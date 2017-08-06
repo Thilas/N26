@@ -2,7 +2,7 @@
 
 namespace N26.Utilities
 {
-    public static class DateTimeUtils
+    internal static class DateTimeUtils
     {
         public static readonly DateTime N26ReferenceDateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

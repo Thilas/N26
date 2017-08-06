@@ -1,45 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using N26.Utilities;
+using NUnit.Framework;
 
 namespace N26.Tests.Utilities
 {
-    [TestClass, TestCategory("Utilities")]
+    [TestFixture, Category("Utilities")]
     public class TimeSpanUtilsTests
     {
-        public static readonly TimeSpan TestTimeSpan = TimeSpan.FromDays(1D);
-        public static readonly long TestN26TimeSpan = 86400L;
-
-        [TestMethod]
-        public void ZeroToN26TimeSpanShouldReturnZero()
+        private static IEnumerable<TimeSpan> GetTimeSpanValues()
         {
-            var expected = 0L;
-            var actual = TimeSpanUtils.ToN26TimeSpan(TimeSpan.Zero);
+            yield return TimeSpan.Zero;
+            yield return TimeSpan.FromDays(1D);
+        }
+
+        private static IEnumerable<long> GetN26TimeSpanValues()
+        {
+            yield return 0L;
+            yield return 86400L;
+        }
+
+        [Test, Sequential]
+        public void ToN26TimeSpanShouldReturnExpectedResult(
+            [ValueSource(nameof(GetTimeSpanValues))] TimeSpan timeSpan,
+            [ValueSource(nameof(GetN26TimeSpanValues))] long expected)
+        {
+            var actual = TimeSpanUtils.ToN26TimeSpan(timeSpan);
             actual.Should().Be(expected);
         }
 
-        [TestMethod]
-        public void ToN26TimeSpanShouldReturnExpectedResult()
+        [Test, Sequential]
+        public void FromN26TimeSpanShouldReturnExpectedResult(
+            [ValueSource(nameof(GetN26TimeSpanValues))] long n26TimeSpan,
+            [ValueSource(nameof(GetTimeSpanValues))] TimeSpan expected)
         {
-            var expected = TestN26TimeSpan;
-            var actual = TimeSpanUtils.ToN26TimeSpan(TestTimeSpan);
-            actual.Should().Be(expected);
-        }
-
-        [TestMethod]
-        public void ZeroFromN26TimeSpanShouldReturnZero()
-        {
-            var expected = TimeSpan.Zero;
-            var actual = TimeSpanUtils.FromN26TimeSpan(0L);
-            actual.Should().Be(expected);
-        }
-
-        [TestMethod]
-        public void FromN26TimeSpanShouldReturnExpectedResult()
-        {
-            var expected = TestTimeSpan;
-            var actual = TimeSpanUtils.FromN26TimeSpan(TestN26TimeSpan);
+            var actual = TimeSpanUtils.FromN26TimeSpan(n26TimeSpan);
             actual.Should().Be(expected);
         }
     }

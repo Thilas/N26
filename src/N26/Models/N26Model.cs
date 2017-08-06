@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace N26.Models
 {
-    public abstract class N26Model<T> : IEquatable<T>
+    public abstract class N26Model<T> : IEquatable<N26Model<T>>
         where T : N26Model<T>
     {
         /// <summary>
@@ -41,9 +41,9 @@ namespace N26.Models
         public override string ToString() => Id.ToString();
 
         public override int GetHashCode() => Id.GetHashCode();
-        public static bool Equals(T left, T right) => left?.Id == right?.Id;
-        public override bool Equals(object obj) => Equals(this, obj as T);
-        public bool Equals(T other) => Equals(this, other);
+        public static bool Equals(N26Model<T> left, N26Model<T> right) => left?.Id == right?.Id;
+        public override bool Equals(object obj) => Equals(this, obj as N26Model<T>);
+        public bool Equals(N26Model<T> other) => Equals(this, other);
         public static bool operator ==(N26Model<T> left, N26Model<T> right) => Equals(left, right);
         public static bool operator !=(N26Model<T> left, N26Model<T> right) => !Equals(left, right);
     }

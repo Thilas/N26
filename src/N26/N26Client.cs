@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autofac;
 using JetBrains.Annotations;
-using N26.Utilities;
+using N26.Json;
 using N26.Models;
 using N26.Queryables;
 using N26.Queryables.Transactions;
+using N26.Utilities;
 using Newtonsoft.Json;
-using N26.Json;
+
+[assembly: InternalsVisibleTo("N26.Tests")]
 
 namespace N26
 {

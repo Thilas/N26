@@ -2,7 +2,7 @@
 
 namespace N26.Utilities
 {
-    public static class TimeSpanUtils
+    internal static class TimeSpanUtils
     {
         public static TimeSpan FromN26TimeSpan(long seconds)
         {
