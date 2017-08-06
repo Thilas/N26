@@ -1,76 +1,53 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Utilities;
 using Newtonsoft.Json;
 
 namespace N26.Models
 {
-    public class Accounts : IEquatable<Accounts>
+    public class Accounts : N26Model<Accounts>
     {
-        [NotNull]
+        [JsonRequired]
         public decimal AvailableBalance { get; }
-        [NotNull]
+        [JsonRequired]
         public decimal UsableBalance { get; }
-        [NotNull]
+        [JsonRequired]
         public decimal BankBalance { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string Iban { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string Bic { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string BankName { get; }
-        [NotNull]
+        [JsonRequired]
         public bool Seized { get; }
-        [NotNull]
-        public Guid Id { get; }
 
         [JsonConstructor]
         internal Accounts(
-            decimal? availableBalance,
-            decimal? usableBalance,
-            decimal? bankBalance,
+            IN26Client n26Client,
+            decimal availableBalance,
+            decimal usableBalance,
+            decimal bankBalance,
             string iban,
             string bic,
             string bankName,
-            bool? seized,
-            Guid? id)
+            bool seized,
+            Guid id)
+            : base(n26Client, id)
         {
-            Guard.IsNotNull(availableBalance, nameof(availableBalance));
-            Guard.IsNotNull(usableBalance, nameof(usableBalance));
-            Guard.IsNotNull(bankBalance, nameof(bankBalance));
-            Guard.IsNotNullNorEmpty(iban, nameof(iban));
-            Guard.IsNotNullNorEmpty(bic, nameof(bic));
-            Guard.IsNotNullNorEmpty(bankName, nameof(bankName));
-            Guard.IsNotNull(seized, nameof(seized));
-            Guard.IsNotNull(id, nameof(id));
-            AvailableBalance = availableBalance.Value;
-            UsableBalance = usableBalance.Value;
-            BankBalance = bankBalance.Value;
+            Guard.IsNotNullOrEmpty(iban, nameof(iban));
+            Guard.IsNotNullOrEmpty(bic, nameof(bic));
+            Guard.IsNotNullOrEmpty(bankName, nameof(bankName));
+            AvailableBalance = availableBalance;
+            UsableBalance = usableBalance;
+            BankBalance = bankBalance;
             Iban = iban;
             Bic = bic;
             BankName = bankName;
-            Seized = seized.Value;
-            Id = id.Value;
+            Seized = seized;
         }
 
         [NotNull]
         public override string ToString() => $"{BankName}, {Iban}";
-
-        public override int GetHashCode() => Id.GetHashCode();
-
-        public static bool operator ==(Accounts a, Accounts b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(Accounts a, Accounts b) => !(a == b);
-
-        public static bool Equals(Accounts a, Accounts b) => a == b;
-
-        public override bool Equals(object obj) => Equals(obj as Accounts);
-
-        public bool Equals(Accounts other) => this == other;
     }
 }

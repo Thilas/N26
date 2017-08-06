@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Json;
+using N26.Utilities;
 using Newtonsoft.Json;
 
 namespace N26.Models
@@ -26,17 +27,15 @@ namespace N26.Models
 
     #endregion
 
-    public class Transaction
+    public class Transaction : N26Model<Transaction>
     {
-        [NotNull]
-        public Guid Id { get; }
-        [NotNull]
+        [JsonRequired]
         public Guid UserId { get; }
-        [NotNull]
+        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalTransactionType>))]
         public TransactionType Type { get; }
-        [NotNull]
+        [JsonRequired]
         public decimal Amount { get; }
-        [NotNull]
+        [JsonRequired]
         public Currency CurrencyCode { get; }
         [CanBeNull]
         public decimal? OriginalAmount { get; }
@@ -46,7 +45,7 @@ namespace N26.Models
         public decimal? ExchangeRate { get; }
         [CanBeNull]
         public string MerchantCity { get; }
-        [NotNull]
+        [JsonRequired]
         public DateTime VisibleTS { get; }
         [CanBeNull]
         public int? Mcc { get; }
@@ -54,135 +53,133 @@ namespace N26.Models
         public int? MccGroup { get; }
         [CanBeNull]
         public string MerchantName { get; }
-        [NotNull]
+        [JsonRequired]
         public bool Recurring { get; }
-        [NotNull]
+        [CanBeNull]
+        public string PartnerBic { get; }
+        [CanBeNull]
+        public string PartnerBcn { get; }
+        [CanBeNull]
+        public bool? PartnerAccountIsSepa { get; }
+        [CanBeNull]
+        public string PartnerBankName { get; }
+        [CanBeNull]
+        public string PartnerName { get; }
+        [JsonRequired]
         public Guid AccountId { get; }
-        [NotNull]
+        [CanBeNull]
+        public string PartnerIban { get; }
+        [CanBeNull]
+        public string PartnerAccountBan { get; }
+        [JsonRequired, NotNull]
         public string Category { get; }
         [CanBeNull]
         public Guid? CardId { get; }
-        [NotNull]
+        [CanBeNull]
+        public string ReferenceText { get; }
+        [CanBeNull]
+        public DateTime? UserAccepted { get; }
+        [JsonRequired]
         public DateTime UserCertified { get; }
-        [NotNull]
+        [JsonRequired]
         public bool Pending { get; }
-        [NotNull]
+        [JsonRequired]
         public TransactionNature TransactionNature { get; }
-        [NotNull]
+        [CanBeNull]
+        public string ReferenceToOriginalOperation { get; }
+        [CanBeNull]
+        public Guid? SmartContactId { get; }
+        [JsonRequired]
         public DateTime CreatedTS { get; }
         [CanBeNull]
         public int? MerchantCountry { get; }
-        [NotNull]
+        [JsonRequired]
         public Guid SmartLinkId { get; }
-        [NotNull]
+        [JsonRequired]
         public Guid LinkId { get; }
-        [NotNull]
+        [JsonRequired]
         public DateTime Confirmed { get; }
 
         [JsonConstructor]
         internal Transaction(
-            Guid? id, Guid? userId, InternalTransactionType? type,
-            decimal? amount, Currency? currencyCode, decimal? originalAmount, Currency? originalCurrency, decimal? exchangeRate,
-            string merchantCity, long? visibleTS, int? mcc, int? mccGroup, string merchantName, bool? recurring,
-            Guid? accountId, string category, Guid? cardId, long? userCertified, bool? pending, TransactionNature? transactionNature,
-            long? createdTS, int? merchantCountry, Guid? smartLinkId, Guid? linkId, long? confirmed)
-            : this(
-                  id, userId, EnumHelper.Convert<InternalTransactionType, TransactionType>(type),
-                  amount, currencyCode, originalAmount, originalCurrency, exchangeRate,
-                  merchantCity, DateTimeHelper.FromJsDate(visibleTS), mcc, mccGroup, merchantName, recurring,
-                  accountId, category, cardId, DateTimeHelper.FromJsDate(userCertified), pending, transactionNature,
-                  DateTimeHelper.FromJsDate(createdTS), merchantCountry, smartLinkId, linkId, DateTimeHelper.FromJsDate(confirmed))
-        {
-        }
-
-        private Transaction(
-            Guid? id,
-            Guid? userId,
-            TransactionType? type,
-            decimal? amount,
-            Currency? currencyCode,
+            IN26Client n26Client,
+            Guid id,
+            Guid userId,
+            TransactionType type,
+            decimal amount,
+            Currency currencyCode,
             decimal? originalAmount,
             Currency? originalCurrency,
             decimal? exchangeRate,
             string merchantCity,
-            DateTime? visibleTS,
+            DateTime visibleTS,
             int? mcc,
             int? mccGroup,
             string merchantName,
-            bool? recurring,
-            Guid? accountId,
+            bool recurring,
+            string partnerBic,
+            string partnerBcn,
+            bool? partnerAccountIsSepa,
+            string partnerBankName,
+            string partnerName,
+            Guid accountId,
+            string partnerIban,
+            string partnerAccountBan,
             string category,
             Guid? cardId,
-            DateTime? userCertified,
-            bool? pending,
-            TransactionNature? transactionNature,
-            DateTime? createdTS,
+            string referenceText,
+            DateTime? userAccepted,
+            DateTime userCertified,
+            bool pending,
+            TransactionNature transactionNature,
+            string referenceToOriginalOperation,
+            Guid? smartContactId,
+            DateTime createdTS,
             int? merchantCountry,
-            Guid? smartLinkId,
-            Guid? linkId,
-            DateTime? confirmed)
+            Guid smartLinkId,
+            Guid linkId,
+            DateTime confirmed)
+            : base(n26Client, id)
         {
-            Guard.IsNotNull(id, nameof(id));
-            Guard.IsNotNull(userId, nameof(userId));
-            Guard.IsNotNull(type, nameof(type));
-            Guard.IsNotNull(amount, nameof(amount));
-            Guard.IsNotNull(currencyCode, nameof(currencyCode));
-            Guard.IsNotNull(visibleTS, nameof(visibleTS));
-            Guard.IsNotNull(recurring, nameof(recurring));
-            Guard.IsNotNull(accountId, nameof(accountId));
-            Guard.IsNotNullNorEmpty(category, nameof(category));
-            Guard.IsNotNull(userCertified, nameof(userCertified));
-            Guard.IsNotNull(pending, nameof(pending));
-            Guard.IsNotNull(transactionNature, nameof(transactionNature));
-            Guard.IsNotNull(createdTS, nameof(createdTS));
-            Guard.IsNotNull(smartLinkId, nameof(smartLinkId));
-            Guard.IsNotNull(linkId, nameof(linkId));
-            Guard.IsNotNull(confirmed, nameof(confirmed));
-            Id = id.Value;
-            UserId = userId.Value;
-            Type = type.Value;
-            Amount = amount.Value;
-            CurrencyCode = currencyCode.Value;
+            Guard.IsNotNullOrEmpty(category, nameof(category));
+            UserId = userId;
+            Type = type;
+            Amount = amount;
+            CurrencyCode = currencyCode;
             OriginalAmount = originalAmount;
             OriginalCurrency = originalCurrency;
             ExchangeRate = exchangeRate;
             MerchantCity = merchantCity;
-            VisibleTS = visibleTS.Value;
+            VisibleTS = visibleTS;
             Mcc = mcc;
             MccGroup = mccGroup;
             MerchantName = merchantName;
-            Recurring = recurring.Value;
-            AccountId = accountId.Value;
+            Recurring = recurring;
+            PartnerBic = partnerBic;
+            PartnerBcn = partnerBcn;
+            PartnerAccountIsSepa = partnerAccountIsSepa;
+            PartnerBankName = partnerBankName;
+            PartnerName = partnerName;
+            AccountId = accountId;
+            PartnerIban = partnerIban;
+            PartnerAccountBan = partnerAccountBan;
             Category = category;
             CardId = cardId;
-            UserCertified = userCertified.Value;
-            Pending = pending.Value;
-            TransactionNature = transactionNature.Value;
-            CreatedTS = createdTS.Value;
+            ReferenceText = referenceText;
+            UserAccepted = userAccepted;
+            UserCertified = userCertified;
+            Pending = pending;
+            TransactionNature = transactionNature;
+            ReferenceToOriginalOperation = referenceToOriginalOperation;
+            SmartContactId = smartContactId;
+            CreatedTS = createdTS;
             MerchantCountry = merchantCountry;
-            SmartLinkId = smartLinkId.Value;
-            LinkId = linkId.Value;
-            Confirmed = confirmed.Value;
+            SmartLinkId = smartLinkId;
+            LinkId = linkId;
+            Confirmed = confirmed;
         }
 
         [NotNull]
-        public override string ToString() => $"{Type}{(string.IsNullOrEmpty(MerchantName) ? null : $", {MerchantName}")}, {VisibleTS:d}, {Amount} {CurrencyCode}";
-
-        public override int GetHashCode() => Id.GetHashCode();
-
-        public static bool operator ==(Transaction a, Transaction b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(Transaction a, Transaction b) => !(a == b);
-
-        public static bool Equals(Transaction a, Transaction b) => a == b;
-
-        public override bool Equals(object obj) => Equals(obj as Transaction);
-
-        public bool Equals(Transaction other) => this == other;
+        public override string ToString() => $"{MerchantName ?? PartnerName}, {VisibleTS:d}, {Amount} {CurrencyCode}";
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using N26.Helpers;
+using N26.Utilities;
 
 namespace N26.Queryables
 {
@@ -24,23 +24,23 @@ namespace N26.Queryables
         private static readonly Lazy<Dictionary<MethodInfo, Lazy<MethodCallVisitor>>> _methodVisitors = new Lazy<Dictionary<MethodInfo, Lazy<MethodCallVisitor>>>(()
             => new Dictionary<MethodInfo, Lazy<MethodCallVisitor>>()
             {
-                { TypeHelper.GetMethodInfo(() => Queryable.All(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Any(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Count(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.ElementAt(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.ElementAtOrDefault(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.All(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Any(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Count(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.ElementAt(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.ElementAtOrDefault(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
                 //{ TypeHelper.GetMethodInfo(() => Queryable.First(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
                 //{ TypeHelper.GetMethodInfo(() => Queryable.FirstOrDefault(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Last(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.LastOrDefault(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.LongCount(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Last(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.LastOrDefault(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.LongCount(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
                 //{ TypeHelper.GetMethodInfo(() => Queryable.Single(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
                 //{ TypeHelper.GetMethodInfo(() => Queryable.SingleOrDefault(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Take(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.TakeWhile(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.TakeWhile(null, default(Expression<Func<object, int, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Where(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
-                { TypeHelper.GetMethodInfo(() => Queryable.Where(null, default(Expression<Func<object, int, bool>>))).GetGenericMethodDefinition(), _predicateVisitor }
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Take(default(IQueryable<object>), 0)).GetGenericMethodDefinition(), _countVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.TakeWhile(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.TakeWhile(null, default(Expression<Func<object, int, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Where(null, default(Expression<Func<object, bool>>))).GetGenericMethodDefinition(), _predicateVisitor },
+                { ReflectionUtils.GetMethodInfo(() => Queryable.Where(null, default(Expression<Func<object, int, bool>>))).GetGenericMethodDefinition(), _predicateVisitor }
             });
 
         public TransactionVisitor(Expression expression)

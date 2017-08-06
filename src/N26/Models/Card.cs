@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Json;
+using N26.Utilities;
 using Newtonsoft.Json;
 
 namespace N26.Models
@@ -49,74 +50,65 @@ namespace N26.Models
 
     #endregion
 
-    public class Card : IEquatable<Card>
+    public class Card : N26Model<Card>
     {
-        [NotNull]
-        public Guid Id { get; }
-        //public ??? PublicToken { get; }
+        [CanBeNull]
+        public object PublicToken { get; }
         [CanBeNull]
         public string Pan { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string MaskedPan { get; }
-        [NotNull]
+        [JsonRequired]
         public DateTime ExpirationDate { get; }
-        [NotNull]
+        [JsonRequired]
         public CardType CardType { get; }
-        [NotNull]
+        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalCardStatus>))]
         public CardStatus Status { get; }
-        [CanBeNull]
+        [JsonConverter(typeof(StringEnumConverter<InternalCardProduct?>)), CanBeNull]
         public CardProduct? CardProduct { get; }
-        [NotNull]
+        [JsonRequired]
         public CardProductType CardProductType { get; }
-        [NotNull]
+        [JsonRequired]
         public DateTime PinDefined { get; }
-        [NotNull]
+        [JsonRequired]
         public DateTime CardActivated { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string UserNameOnCard { get; }
-        //public ??? ExceetExpressCardDelivery { get; }
-        //public ??? Membership { get; }
-        //public ??? ExceetActualDeliveryDate { get; }
-        //public ??? ExceetExpressCardDeliveryEmailSent { get; }
-        //public ??? ExceetCardStatus { get; }
-        //public ??? ExceetExpectedDeliveryDate { get; }
-        //public ??? ExceetExpressCardDeliveryTrackingId { get; }
-        //public ??? CardSettingsId { get; }
-        [NotNull]
+        [CanBeNull]
+        public object ExceetExpressCardDelivery { get; }
+        [CanBeNull]
+        public object Membership { get; }
+        [CanBeNull]
+        public object ExceetActualDeliveryDate { get; }
+        [CanBeNull]
+        public object ExceetExpressCardDeliveryEmailSent { get; }
+        [CanBeNull]
+        public object ExceetCardStatus { get; }
+        [CanBeNull]
+        public object ExceetExpectedDeliveryDate { get; }
+        [CanBeNull]
+        public object ExceetExpressCardDeliveryTrackingId { get; }
+        [CanBeNull]
+        public object CardSettingsId { get; }
+        [JsonRequired]
         public bool ApplePayEligible { get; }
-        [NotNull]
+        [JsonRequired]
         public bool MptsCard { get; }
 
         [JsonConstructor]
         internal Card(
-            Guid? id, object publicToken, string pan, string maskedPan, long? expirationDate, CardType? cardType,
-            InternalCardStatus? status, InternalCardProduct? cardProduct,
-            CardProductType? cardProductType, long? pinDefined, long? cardActivated, string userNameOnCard,
-            object exceetExpressCardDelivery, object membership, object exceetActualDeliveryDate, object exceetExpressCardDeliveryEmailSent,
-            object exceetCardStatus, object exceetExpectedDeliveryDate, object exceetExpressCardDeliveryTrackingId, object cardSettingsId,
-            bool? applePayEligible, bool? mptsCard)
-            : this(
-                  id, publicToken, pan, maskedPan, DateTimeHelper.FromJsDate(expirationDate), cardType,
-                  EnumHelper.Convert<InternalCardStatus, CardStatus>(status), EnumHelper.Convert<InternalCardProduct, CardProduct>(cardProduct),
-                  cardProductType, DateTimeHelper.FromJsDate(pinDefined), DateTimeHelper.FromJsDate(cardActivated), userNameOnCard,
-                  exceetExpressCardDelivery, membership, exceetActualDeliveryDate, exceetExpressCardDeliveryEmailSent,
-                  exceetCardStatus, exceetExpectedDeliveryDate, exceetExpressCardDeliveryTrackingId, cardSettingsId,
-                  applePayEligible, mptsCard)
-        {
-        }
-
-        private Card(
-            Guid? id,
+            IN26Client n26Client,
+            Guid id,
             object publicToken,
             string pan,
             string maskedPan,
-            DateTime? expirationDate,
-            CardType? cardType,
-            CardStatus? status,
+            DateTime expirationDate,
+            CardType cardType,
+            CardStatus status,
             CardProduct? cardProduct,
-            CardProductType? cardProductType,
-            DateTime? pinDefined,
-            DateTime? cardActivated,
+            CardProductType cardProductType,
+            DateTime pinDefined,
+            DateTime cardActivated,
             string userNameOnCard,
             object exceetExpressCardDelivery,
             object membership,
@@ -126,21 +118,15 @@ namespace N26.Models
             object exceetExpectedDeliveryDate,
             object exceetExpressCardDeliveryTrackingId,
             object cardSettingsId,
-            bool? applePayEligible,
-            bool? mptsCard)
+            bool applePayEligible,
+            bool mptsCard)
+            : base(n26Client, id)
         {
-            Guard.IsNotNull(id, nameof(id));
 #if DEBUG
             if (publicToken != null) throw new NotImplementedException();
 #endif
-            Guard.IsNotNullNorEmpty(maskedPan, nameof(maskedPan));
-            Guard.IsNotNull(expirationDate, nameof(expirationDate));
-            Guard.IsNotNull(cardType, nameof(cardType));
-            Guard.IsNotNull(status, nameof(status));
-            Guard.IsNotNull(cardProductType, nameof(cardProductType));
-            Guard.IsNotNull(pinDefined, nameof(pinDefined));
-            Guard.IsNotNull(cardActivated, nameof(cardActivated));
-            Guard.IsNotNullNorEmpty(userNameOnCard, nameof(userNameOnCard));
+            Guard.IsNotNullOrEmpty(maskedPan, nameof(maskedPan));
+            Guard.IsNotNullOrEmpty(userNameOnCard, nameof(userNameOnCard));
 #if DEBUG
             if (exceetExpressCardDelivery != null) throw new NotImplementedException();
             if (membership != null) throw new NotImplementedException();
@@ -151,50 +137,30 @@ namespace N26.Models
             if (exceetExpressCardDeliveryTrackingId != null) throw new NotImplementedException();
             if (cardSettingsId != null) throw new NotImplementedException();
 #endif
-            Guard.IsNotNull(applePayEligible, nameof(applePayEligible));
-            Guard.IsNotNull(mptsCard, nameof(mptsCard));
-            Id = id.Value;
-            //PublicToken = publicToken;
+            PublicToken = publicToken;
             Pan = pan;
             MaskedPan = maskedPan;
-            ExpirationDate = expirationDate.Value;
-            CardType = cardType.Value;
-            Status = status.Value;
+            ExpirationDate = expirationDate;
+            CardType = cardType;
+            Status = status;
             CardProduct = cardProduct;
-            CardProductType = cardProductType.Value;
-            PinDefined = pinDefined.Value;
-            CardActivated = cardActivated.Value;
+            CardProductType = cardProductType;
+            PinDefined = pinDefined;
+            CardActivated = cardActivated;
             UserNameOnCard = userNameOnCard;
-            //ExceetExpressCardDelivery = exceetExpressCardDelivery;
-            //Membership = membership;
-            //ExceetActualDeliveryDate = exceetActualDeliveryDate;
-            //ExceetExpressCardDeliveryEmailSent = exceetExpressCardDeliveryEmailSent;
-            //ExceetCardStatus = exceetCardStatus;
-            //ExceetExpectedDeliveryDate = exceetExpectedDeliveryDate;
-            //ExceetExpressCardDeliveryTrackingId = exceetExpressCardDeliveryTrackingId;
-            //CardSettingsId = cardSettingsId;
-            ApplePayEligible = applePayEligible.Value;
-            MptsCard = mptsCard.Value;
+            ExceetExpressCardDelivery = exceetExpressCardDelivery;
+            Membership = membership;
+            ExceetActualDeliveryDate = exceetActualDeliveryDate;
+            ExceetExpressCardDeliveryEmailSent = exceetExpressCardDeliveryEmailSent;
+            ExceetCardStatus = exceetCardStatus;
+            ExceetExpectedDeliveryDate = exceetExpectedDeliveryDate;
+            ExceetExpressCardDeliveryTrackingId = exceetExpressCardDeliveryTrackingId;
+            CardSettingsId = cardSettingsId;
+            ApplePayEligible = applePayEligible;
+            MptsCard = mptsCard;
         }
 
         [NotNull]
         public override string ToString() => $"{CardType} {CardProductType}, {MaskedPan}, {ExpirationDate:y}";
-
-        public override int GetHashCode() => Id.GetHashCode();
-
-        public static bool operator ==(Card a, Card b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(Card a, Card b) => !(a == b);
-
-        public static bool Equals(Card a, Card b) => a == b;
-
-        public override bool Equals(object obj) => Equals(obj as Card);
-
-        public bool Equals(Card other) => this == other;
     }
 }

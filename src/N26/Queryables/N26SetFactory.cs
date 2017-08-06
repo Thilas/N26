@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using N26.Helpers;
+using N26.Utilities;
 
 namespace N26.Queryables
 {

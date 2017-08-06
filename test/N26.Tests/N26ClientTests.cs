@@ -6,9 +6,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace N26.Tests
 {
     [TestClass, TestCategory("Integration Tests")]
-    public class N26Testsa
+    public class N26ClientTests
     {
-        public static N26 N26 { get; private set; }
+        public static N26Client N26Client { get; private set; }
 
         [ClassInitialize]
         public static async Task Initialize(TestContext testContext)
@@ -19,51 +19,51 @@ namespace N26.Tests
             {
                 Assert.Inconclusive("Properties \"userName\" and/or \"password\" are missing.");
             }
-            N26 = await N26.LoginAsync(userName, password);
-            N26.Should().NotBeNull();
-            N26.Token.Should().NotBeNull();
+            N26Client = await N26Client.LoginAsync(userName, password);
+            N26Client.Should().NotBeNull();
+            N26Client.Token.Should().NotBeNull();
         }
 
         [TestMethod]
-        public async Task TestAccounts()
+        public async Task GetAccountsShouldNotBeNull()
         {
-            var sut = await N26.GetAccountsAsync();
+            var sut = await N26Client.GetAccountsAsync();
             sut.Should().NotBeNull();
         }
 
         [TestMethod]
-        public async Task TestAddresses()
+        public async Task GetAddressesShouldNotBeNullAndNotContainNulls()
         {
-            var sut = await N26.GetAddressesAsync();
+            var sut = await N26Client.GetAddressesAsync();
             sut.Should().NotBeNull().And.NotContainNulls();
         }
 
         [TestMethod]
-        public async Task TestCards()
+        public async Task GetCardsShouldNotBeNullAndNotContainNulls()
         {
-            var sut = await N26.GetCardsAsync();
+            var sut = await N26Client.GetCardsAsync();
             sut.Should().NotBeNull().And.NotContainNulls();
         }
 
         [TestMethod]
-        public async Task TestMe()
+        public async Task GetMeShouldNotBeNull()
         {
-            var sut = await N26.GetMeAsync();
+            var sut = await N26Client.GetMeAsync();
             sut.Should().NotBeNull();
         }
 
         [TestMethod]
-        public async Task TestTransactions()
+        public async Task GetTransactionsShouldNotBeNullAndNotContainNulls()
         {
-            var sut = await N26.GetTransactionsAsync();
+            var sut = await N26Client.GetTransactionsAsync();
             sut.Should().NotBeNull().And.NotContainNulls();
         }
 
-        [TestMethod]
-        public void TestQueryable()
-        {
-            var sut = N26.Transactions.Where(t => t.Amount > 100).ToList();
-            sut.Should().NotBeNull().And.NotContainNulls();
-        }
+        //[TestMethod]
+        //public void TestQueryable()
+        //{
+        //    var sut = N26.Transactions.Where(t => t.Amount > 100).ToList();
+        //    sut.Should().NotBeNull().And.NotContainNulls();
+        //}
     }
 }

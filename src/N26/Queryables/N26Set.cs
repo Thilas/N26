@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Utilities;
 
 namespace N26.Queryables
 {
@@ -12,7 +12,6 @@ namespace N26.Queryables
     {
         internal N26Set(N26SetFactory setFactory)
         {
-            Guard.IsNotNull(setFactory, nameof(setFactory));
             Provider = new N26Provider(setFactory);
             Expression = Expression.Constant(this);
         }

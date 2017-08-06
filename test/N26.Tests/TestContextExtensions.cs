@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using N26.Helpers;
+using N26.Utilities;
 
 namespace N26.Tests
 {
-    public static class TestContextExtensions
+    internal static class TestContextExtensions
     {
         /// <summary>
         /// Gets the property value.
@@ -26,7 +26,7 @@ namespace N26.Tests
         public static T GetPropertyValue<T>(this TestContext testContext, string key, Func<object, T> selector)
         {
             Guard.IsNotNull(testContext, nameof(testContext));
-            Guard.IsNotNullNorEmpty(key, nameof(key));
+            Guard.IsNotNullOrEmpty(key, nameof(key));
             Guard.IsNotNull(selector, nameof(selector));
             if (!testContext.Properties.TryGetValue(key, out var value)) value = null;
             return selector(value);

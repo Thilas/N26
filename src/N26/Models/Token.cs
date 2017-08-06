@@ -1,6 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Json;
 using Newtonsoft.Json;
 
 namespace N26.Models
@@ -12,50 +12,35 @@ namespace N26.Models
 
     public class Token : IEquatable<Token>
     {
-        [NotNull]
+        [JsonProperty("access_token", Required = Required.Always)]
         public Guid AccessToken { get; }
-        [NotNull]
+        [JsonProperty("token_type", Required = Required.Always)]
         public TokenType TokenType { get; }
-        [NotNull]
+        [JsonProperty("refresh_token", Required = Required.Always)]
         public Guid RefreshToken { get; }
-        [NotNull]
+        [JsonProperty("expires_in", Required = Required.Always)]
         public TimeSpan ExpiresIn { get; }
-        [NotNull]
+        [JsonProperty("scope", Required = Required.Always), JsonConverter(typeof(StringFlagsEnumConverter))]
         public TokenScope Scope { get; }
 
         [JsonConstructor]
-        internal Token(Guid? access_token, TokenType? token_type, Guid? refresh_token, int? expires_in, TokenScope? scope)
+        internal Token(Guid accessToken, TokenType tokenType, Guid refreshToken, TimeSpan expiresIn, TokenScope scope)
         {
-            Guard.IsNotNull(access_token, nameof(access_token));
-            Guard.IsNotNull(token_type, nameof(token_type));
-            Guard.IsNotNull(refresh_token, nameof(refresh_token));
-            Guard.IsNotNull(expires_in, nameof(expires_in));
-            Guard.IsNotNull(scope, nameof(scope));
-            AccessToken = access_token.Value;
-            TokenType = token_type.Value;
-            RefreshToken = refresh_token.Value;
-            ExpiresIn = TimeSpanHelper.FromSeconds(expires_in).Value;
-            Scope = scope.Value;
+            AccessToken = accessToken;
+            TokenType = tokenType;
+            RefreshToken = refreshToken;
+            ExpiresIn = expiresIn;
+            Scope = scope;
         }
 
         [NotNull]
         public override string ToString() => $"{TokenType}, {AccessToken}";
 
         public override int GetHashCode() => AccessToken.GetHashCode();
-
-        public static bool operator ==(Token a, Token b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
-            return a.AccessToken == b.AccessToken;
-        }
-
-        public static bool operator !=(Token a, Token b) => !(a == b);
-
-        public static bool Equals(Token a, Token b) => a == b;
-
-        public override bool Equals(object obj) => Equals(obj as Token);
-
-        public bool Equals(Token other) => this == other;
+        public static bool Equals(Token left, Token right) => left?.AccessToken == right?.AccessToken;
+        public override bool Equals(object obj) => Equals(this, obj as Token);
+        public bool Equals(Token other) => Equals(this, other);
+        public static bool operator ==(Token left, Token right) => Equals(left, right);
+        public static bool operator !=(Token left, Token right) => !Equals(left, right);
     }
 }

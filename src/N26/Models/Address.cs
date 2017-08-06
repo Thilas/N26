@@ -1,77 +1,57 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Helpers;
+using N26.Utilities;
 using Newtonsoft.Json;
 
 namespace N26.Models
 {
     public enum AddressType { Legal, Passport, Shipping }
 
-    public class Address : IEquatable<Address>
+    public class Address : N26Model<Address>
     {
         [CanBeNull]
         public string AddressLine1 { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string StreetName { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string HouseNumberBlock { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string ZipCode { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string CityName { get; }
-        [NotNull]
+        [JsonRequired, NotNull]
         public string CountryName { get; }
-        [NotNull]
+        [JsonRequired]
         public AddressType Type { get; }
-        [NotNull]
-        public Guid Id { get; }
 
         [JsonConstructor]
         internal Address(
+            IN26Client n26Client,
             string addressLine1,
             string streetName,
             string houseNumberBlock,
             string zipCode,
             string cityName,
             string countryName,
-            AddressType? type,
-            Guid? id)
+            AddressType type,
+            Guid id)
+            : base(n26Client, id)
         {
-            Guard.IsNotNullNorEmpty(streetName, nameof(streetName));
-            Guard.IsNotNullNorEmpty(houseNumberBlock, nameof(houseNumberBlock));
-            Guard.IsNotNullNorEmpty(zipCode, nameof(zipCode));
-            Guard.IsNotNullNorEmpty(cityName, nameof(cityName));
-            Guard.IsNotNullNorEmpty(countryName, nameof(countryName));
-            Guard.IsNotNull(type, nameof(type));
-            Guard.IsNotNull(id, nameof(id));
+            Guard.IsNotNullOrEmpty(streetName, nameof(streetName));
+            Guard.IsNotNullOrEmpty(houseNumberBlock, nameof(houseNumberBlock));
+            Guard.IsNotNullOrEmpty(zipCode, nameof(zipCode));
+            Guard.IsNotNullOrEmpty(cityName, nameof(cityName));
+            Guard.IsNotNullOrEmpty(countryName, nameof(countryName));
             AddressLine1 = addressLine1;
             StreetName = streetName;
             HouseNumberBlock = houseNumberBlock;
             ZipCode = zipCode;
             CityName = cityName;
             CountryName = countryName;
-            Type = type.Value;
-            Id = id.Value;
+            Type = type;
         }
 
         [NotNull]
         public override string ToString() => $"{Type}, {CityName}";
-
-        public override int GetHashCode() => Id.GetHashCode();
-
-        public static bool operator ==(Address a, Address b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(Address a, Address b) => !(a == b);
-
-        public static bool Equals(Address a, Address b) => a == b;
-
-        public override bool Equals(object obj) => Equals(obj as Address);
-
-        public bool Equals(Address other) => this == other;
     }
 }
