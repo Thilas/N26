@@ -11,15 +11,12 @@ namespace N26.Models
         /// <summary>
         /// Gets the N26 client.
         /// </summary>
-        /// <value>
-        /// The N26 client.
-        /// </value>
         /// <remarks>
-        /// <see cref="N26Client" /> is decorated with <see cref="JsonPropertyAttribute" />
+        /// <see cref="Client" /> is decorated with <see cref="JsonPropertyAttribute" />
         /// so that it gets its value from <see cref="Newtonsoft.Json" /> through <see cref="Autofac" />.
         /// </remarks>
-        [JsonProperty]
-        protected IN26Client N26Client { get; }
+        [JsonProperty, NotNull]
+        protected IClient Client { get; }
 
         /// <summary>
         /// Gets the identifier.
@@ -27,13 +24,13 @@ namespace N26.Models
         /// <value>
         /// The identifier.
         /// </value>
-        [JsonRequired, NotNull]
+        [JsonRequired]
         public Guid Id { get; }
 
-        protected N26Model(IN26Client n26Client, Guid id)
+        protected N26Model([NotNull] IClient client, Guid id)
         {
-            Guard.IsNotNull(n26Client, nameof(n26Client));
-            N26Client = n26Client;
+            Guard.IsNotNull(client, nameof(client));
+            Client = client;
             Id = id;
         }
 

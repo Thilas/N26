@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using N26.Utilities;
 using NUnit.Framework;
 
@@ -22,21 +21,21 @@ namespace N26.Tests.Utilities
         }
 
         [Test, Sequential]
-        public void ToN26TimeSpanShouldReturnExpectedResult(
+        public void ToN26TimeSpanReturnsExpectedResult(
             [ValueSource(nameof(GetTimeSpanValues))] TimeSpan timeSpan,
             [ValueSource(nameof(GetN26TimeSpanValues))] long expected)
         {
             var actual = TimeSpanUtils.ToN26TimeSpan(timeSpan);
-            actual.Should().Be(expected);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test, Sequential]
-        public void FromN26TimeSpanShouldReturnExpectedResult(
+        public void FromN26TimeSpanReturnsExpectedResult(
             [ValueSource(nameof(GetN26TimeSpanValues))] long n26TimeSpan,
             [ValueSource(nameof(GetTimeSpanValues))] TimeSpan expected)
         {
             var actual = TimeSpanUtils.FromN26TimeSpan(n26TimeSpan);
-            actual.Should().Be(expected);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

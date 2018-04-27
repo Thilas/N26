@@ -7,7 +7,8 @@ namespace N26.Models
 {
     public enum AddressType { Legal, Passport, Shipping }
 
-    public class Address : N26Model<Address>
+    [N26Model("api/addresses", typeof(Collection<>))]
+    public sealed class Address : N26Model<Address>
     {
         [CanBeNull]
         public string AddressLine1 { get; }
@@ -23,19 +24,22 @@ namespace N26.Models
         public string CountryName { get; }
         [JsonRequired]
         public AddressType Type { get; }
+        [JsonRequired]
+        public Guid UserId { get; }
 
         [JsonConstructor]
         internal Address(
-            IN26Client n26Client,
-            string addressLine1,
-            string streetName,
-            string houseNumberBlock,
-            string zipCode,
-            string cityName,
-            string countryName,
+            [NotNull] IClient client,
+            [CanBeNull] string addressLine1,
+            [NotNull] string streetName,
+            [NotNull] string houseNumberBlock,
+            [NotNull] string zipCode,
+            [NotNull] string cityName,
+            [NotNull] string countryName,
             AddressType type,
+            Guid userId,
             Guid id)
-            : base(n26Client, id)
+            : base(client, id)
         {
             Guard.IsNotNullOrEmpty(streetName, nameof(streetName));
             Guard.IsNotNullOrEmpty(houseNumberBlock, nameof(houseNumberBlock));
@@ -49,6 +53,7 @@ namespace N26.Models
             CityName = cityName;
             CountryName = countryName;
             Type = type;
+            UserId = userId;
         }
 
         [NotNull]

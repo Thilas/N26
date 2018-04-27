@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using N26.Utilities;
 using NUnit.Framework;
 
@@ -22,21 +21,21 @@ namespace N26.Tests.Utilities
         }
 
         [Test, Sequential]
-        public void ToN26DateTimeShouldReturnExpectedResult(
+        public void ToN26DateTimeReturnsExpectedResult(
             [ValueSource(nameof(GetDateTimeValues))] DateTime dateTime,
             [ValueSource(nameof(GetN26DateTimeValues))] long expected)
         {
             var actual = DateTimeUtils.ToN26DateTime(dateTime);
-            actual.Should().Be(expected);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test, Sequential]
-        public void FromN26DateTimeShouldReturnExpectedResult(
+        public void FromN26DateTimeReturnsExpectedResult(
             [ValueSource(nameof(GetN26DateTimeValues))] long n26DateTime,
             [ValueSource(nameof(GetDateTimeValues))] DateTime expected)
         {
             var actual = DateTimeUtils.FromN26DateTime(n26DateTime);
-            actual.Should().Be(expected);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

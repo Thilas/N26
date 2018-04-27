@@ -9,10 +9,11 @@ using N26.Models;
 
 namespace N26.Queryables.Transactions
 {
-    internal class TransactionFactory : N26SetFactory<Transaction>
+    internal class TransactionFactory
     {
         public TransactionFactory(Func<string, Task<IEnumerable<Transaction>>> factoryAsync, string relativeUri)
-            : base(async expression => await factoryAsync(GetRelativeUri(relativeUri, expression))) { }
+        {
+        }
 
         private static string GetRelativeUri(string relativeUri, Expression expression)
         {

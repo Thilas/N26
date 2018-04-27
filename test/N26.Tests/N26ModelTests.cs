@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
+using Moq;
 using N26.Models;
 using NUnit.Framework;
 
@@ -11,9 +11,9 @@ namespace N26.Tests
     {
         private static IEnumerable<object[]> GetEqualityTestCases()
         {
-            var n26Client = new N26Client();
-            var model1 = new N26Model(n26Client, new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
-            var model2 = new N26Model(n26Client, new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2));
+            var client = Mock.Of<IClient>();
+            var model1 = new TestModel(client, new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+            var model2 = new TestModel(client, new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2));
             yield return new object[] { null, null, true };
             yield return new object[] { model1, null, false };
             yield return new object[] { null, model1, false };
@@ -22,44 +22,64 @@ namespace N26.Tests
         }
 
         [Test, TestCaseSource(nameof(GetEqualityTestCases))]
-        public void StaticEqualsShouldReturnExpectedResult(N26Model left, N26Model right, bool expected)
+        public void StaticEqualsReturnsExpectedResult(TestModel left, TestModel right, bool result)
         {
-            var sut = N26Model.Equals(left, right);
-            sut.Should().Be(expected);
-        }
-
-        [Test, TestCaseSource(nameof(GetEqualityTestCases))]
-        public void EqualsShouldReturnExpectedResult(N26Model left, N26Model right, bool expected)
-        {
-            if (left != null)
+            if (result)
             {
-                var sut = left.Equals(right);
-                sut.Should().Be(expected);
+                Assert.That(left, Is.EqualTo(right));
+            }
+            else
+            {
+                Assert.That(left, Is.Not.EqualTo(right));
             }
         }
 
         [Test, TestCaseSource(nameof(GetEqualityTestCases))]
-        public void EqualityOperatorShouldReturnExpectedResult(N26Model left, N26Model right, bool expected)
+        public void EqualsReturnsExpectedResult(TestModel left, TestModel right, bool result)
         {
-            var sut = left == right;
-            sut.Should().Be(expected);
+            if (left != null)
+            {
+                if (result)
+                {
+                    Assert.That(left, Is.EqualTo(right));
+                }
+                else
+                {
+                    Assert.That(left, Is.Not.EqualTo(right));
+                }
+            }
         }
 
         [Test, TestCaseSource(nameof(GetEqualityTestCases))]
-        public void InequalityOperatorShouldReturnExpectedResult(N26Model left, N26Model right, bool expected)
+        public void EqualityOperatorReturnsExpectedResult(TestModel left, TestModel right, bool result)
         {
-            var sut = left != right;
-            sut.Should().Be(!expected);
+            if (result)
+            {
+                Assert.That(left, Is.EqualTo(right));
+            }
+            else
+            {
+                Assert.That(left, Is.Not.EqualTo(right));
+            }
         }
 
-        public class N26Client : IN26Client
+        [Test, TestCaseSource(nameof(GetEqualityTestCases))]
+        public void InequalityOperatorReturnsExpectedResult(TestModel left, TestModel right, bool result)
         {
+            if (result)
+            {
+                Assert.That(left, Is.EqualTo(right));
+            }
+            else
+            {
+                Assert.That(left, Is.Not.EqualTo(right));
+            }
         }
 
-        public class N26Model : N26Model<N26Model>
+        public class TestModel : N26Model<TestModel>
         {
-            public N26Model(IN26Client n26Client, Guid id)
-                : base(n26Client, id)
+            public TestModel(IClient client, Guid id)
+                : base(client, id)
             {
             }
         }

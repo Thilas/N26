@@ -8,14 +8,15 @@ namespace N26.Json
     /// <summary>
     /// Converts an <see cref="Enum"/> to and from the name string value of <typeparamref name="T"/>.
     /// </summary>
-    internal class StringEnumConverter<T> : StringEnumConverter
+    internal sealed class StringEnumConverter<T> : StringEnumConverter
     {
-        public StringEnumConverter() : base()
+        public StringEnumConverter()
+            : this(false)
         {
-            Guard.IsAssignableTo<Enum>(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T), nameof(T));
         }
 
-        public StringEnumConverter(bool camelCaseText) : base(camelCaseText)
+        public StringEnumConverter(bool camelCaseText)
+            : base(camelCaseText)
         {
             Guard.IsAssignableTo<Enum>(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T), nameof(T));
         }
@@ -50,7 +51,7 @@ namespace N26.Json
 
             if (fromValue == null)
             {
-                if (!ReflectionUtils.IsNullable(objectType))
+                if (!objectType.IsNullableType())
                 {
                     throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
                 }

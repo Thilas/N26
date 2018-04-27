@@ -1,17 +1,22 @@
-﻿using N26.Utilities;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using JetBrains.Annotations;
+using N26.Utilities;
 using Newtonsoft.Json;
 
 namespace N26.Models
 {
-    internal class Collection<T>
+    [JsonObject]
+    internal sealed partial class Collection<T> : IEnumerable<T>
     {
-        [JsonRequired]
+        [JsonRequired, NotNull]
         public CollectionPaging Paging { get; }
 
-        [JsonRequired]
-        public T[] Data { get; }
+        [JsonRequired, NotNull, ItemNotNull]
+        public ImmutableList<T> Data { get; }
 
-        public Collection(CollectionPaging paging, T[] data)
+        public Collection([NotNull] CollectionPaging paging, [NotNull, ItemNotNull] ImmutableList<T> data)
         {
             Guard.IsNotNull(paging, nameof(paging));
             Guard.IsNotNull(data, nameof(data));
@@ -19,15 +24,10 @@ namespace N26.Models
             Data = data;
         }
 
-        public class CollectionPaging
-        {
-            [JsonRequired]
-            public int TotalResults { get; }
+        [NotNull, ItemNotNull]
+        public IEnumerator<T> GetEnumerator() => Data.GetEnumerator();
 
-            public CollectionPaging(int totalResults)
-            {
-                TotalResults = totalResults;
-            }
-        }
+        [NotNull, ItemNotNull]
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

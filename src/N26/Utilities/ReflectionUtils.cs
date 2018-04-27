@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace N26.Utilities
 {
     internal static class ReflectionUtils
     {
-        public static MethodInfo GetMethodInfo(Expression<Action> expression)
+        [NotNull]
+        public static MethodInfo GetMethodInfo([NotNull] Expression<Action> expression)
             => GetMethodInfo((LambdaExpression)expression);
 
-        public static MethodInfo GetMethodInfo<T>(Expression<Action<T>> expression)
+        [NotNull]
+        public static MethodInfo GetMethodInfo<T>([NotNull] Expression<Action<T>> expression)
             => GetMethodInfo((LambdaExpression)expression);
 
-        public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)
+        [NotNull]
+        public static MethodInfo GetMethodInfo<T, TResult>([NotNull] Expression<Func<T, TResult>> expression)
             => GetMethodInfo((LambdaExpression)expression);
 
         private static MethodInfo GetMethodInfo(LambdaExpression expression)
@@ -22,13 +26,5 @@ namespace N26.Utilities
             var outermostExpression = (MethodCallExpression)expression.Body;
             return outermostExpression.Method;
         }
-
-        public static bool IsNullable(Type type)
-        {
-            Guard.IsNotNull(type, nameof(type));
-            var typeInfo = type.GetTypeInfo();
-            return !typeInfo.IsValueType || typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
     }
 }

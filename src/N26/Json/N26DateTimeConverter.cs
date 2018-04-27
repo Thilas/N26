@@ -7,7 +7,7 @@ namespace N26.Json
     /// <summary>
     /// Converts a <see cref="DateTime"/> to and from a N26 datetime.
     /// </summary>
-    internal class N26DateTimeConverter : JsonConverter
+    internal sealed class N26DateTimeConverter : JsonConverter
     {
         /// <summary>
         /// Determines whether this instance can convert the specified object type.
@@ -54,7 +54,7 @@ namespace N26.Json
 
             if (reader.TokenType == JsonToken.Null)
             {
-                if (!ReflectionUtils.IsNullable(objectType))
+                if (!objectType.IsNullableType())
                 {
                     throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
                 }

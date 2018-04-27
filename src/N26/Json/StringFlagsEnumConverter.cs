@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using N26.Utilities;
@@ -10,28 +11,25 @@ namespace N26.Json
     /// <summary>
     /// Converts an <see cref="Enum"/> with <see cref="FlagsAttribute"/> to and from its name string value.
     /// </summary>
-    internal class StringFlagsEnumConverter : StringEnumConverter
+    internal sealed class StringFlagsEnumConverter : StringEnumConverter
     {
-        public StringFlagsEnumConverter() : base()
+        public StringFlagsEnumConverter()
+            : this(false)
         {
         }
 
-        public StringFlagsEnumConverter(bool camelCaseText) : base(camelCaseText)
+        public StringFlagsEnumConverter(bool camelCaseText)
+            : base(camelCaseText)
         {
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return base.CanConvert(objectType)
+                && (Nullable.GetUnderlyingType(objectType) ?? objectType).GetCustomAttribute<FlagsAttribute>() != null;
         }
 
         public override bool CanWrite => false;
-
-        /// <summary>
-        /// Writes the JSON representation of the object.
-        /// </summary>
-        /// <param name="writer">The <see cref="JsonWriter" /> to write to.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotSupportedException();
-        }
 
         /// <summary>
         /// Reads the JSON representation of the object.
@@ -50,7 +48,7 @@ namespace N26.Json
             return value;
         }
 
-        private class StringFlagsEnumJsonReader : JsonReader
+        private sealed class StringFlagsEnumJsonReader : JsonReader
         {
             private readonly JsonReader _reader;
 
@@ -66,7 +64,7 @@ namespace N26.Json
                 {
                     if (TokenType != JsonToken.String) return _reader.Value;
                     var value = _reader.Value?.ToString();
-                    value = value?.Replace(' ', ',');
+                    value = value?.Replace(" ", ", ");
                     return value;
                 }
             }

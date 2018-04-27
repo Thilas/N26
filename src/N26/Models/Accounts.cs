@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 
 namespace N26.Models
 {
-    public class Accounts : N26Model<Accounts>
+    [N26Model("api/accounts")]
+    public sealed class Accounts : N26Model<Accounts>
     {
         [JsonRequired]
         public decimal AvailableBalance { get; }
@@ -24,16 +25,16 @@ namespace N26.Models
 
         [JsonConstructor]
         internal Accounts(
-            IN26Client n26Client,
+            [NotNull] IClient client,
             decimal availableBalance,
             decimal usableBalance,
             decimal bankBalance,
-            string iban,
-            string bic,
-            string bankName,
+            [NotNull] string iban,
+            [NotNull] string bic,
+            [NotNull] string bankName,
             bool seized,
             Guid id)
-            : base(n26Client, id)
+            : base(client, id)
         {
             Guard.IsNotNullOrEmpty(iban, nameof(iban));
             Guard.IsNotNullOrEmpty(bic, nameof(bic));

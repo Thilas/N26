@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace JetBrains.Annotations
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspChildControlTypeAttribute : Attribute
+    public sealed class AspChildControlTypeAttribute : Attribute
     {
         [NotNull]
         public string TagName { get; private set; }
@@ -20,17 +20,17 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspDataFieldAttribute : Attribute
+    public sealed class AspDataFieldAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspDataFieldsAttribute : Attribute
+    public sealed class AspDataFieldsAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMethodPropertyAttribute : Attribute
+    public sealed class AspMethodPropertyAttribute : Attribute
     {
     }
 
@@ -41,7 +41,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcActionAttribute : Attribute
+    public sealed class AspMvcActionAttribute : Attribute
     {
         [CanBeNull]
         public string AnonymousProperty { get; private set; }
@@ -68,7 +68,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcActionSelectorAttribute : Attribute
+    public sealed class AspMvcActionSelectorAttribute : Attribute
     {
     }
 
@@ -78,7 +78,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcAreaAttribute : Attribute
+    public sealed class AspMvcAreaAttribute : Attribute
     {
         [CanBeNull]
         public string AnonymousProperty { get; private set; }
@@ -94,7 +94,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -106,7 +106,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -118,7 +118,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -136,7 +136,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcControllerAttribute : Attribute
+    public sealed class AspMvcControllerAttribute : Attribute
     {
         [CanBeNull]
         public string AnonymousProperty { get; private set; }
@@ -157,7 +157,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcDisplayTemplateAttribute : Attribute
+    public sealed class AspMvcDisplayTemplateAttribute : Attribute
     {
     }
 
@@ -167,7 +167,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcEditorTemplateAttribute : Attribute
+    public sealed class AspMvcEditorTemplateAttribute : Attribute
     {
     }
 
@@ -176,12 +176,12 @@ namespace JetBrains.Annotations
     /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcMasterAttribute : Attribute
+    public sealed class AspMvcMasterAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcMasterLocationFormatAttribute : Attribute
+    public sealed class AspMvcMasterLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -197,7 +197,7 @@ namespace JetBrains.Annotations
     /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, Object)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcModelTypeAttribute : Attribute
+    public sealed class AspMvcModelTypeAttribute : Attribute
     {
     }
 
@@ -208,12 +208,12 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcPartialViewAttribute : Attribute
+    public sealed class AspMvcPartialViewAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -228,7 +228,7 @@ namespace JetBrains.Annotations
     /// ASP.NET MVC attribute. Allows disabling inspections for MVC views within a class or a method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcSuppressViewErrorAttribute : Attribute
+    public sealed class AspMvcSuppressViewErrorAttribute : Attribute
     {
     }
 
@@ -238,7 +238,7 @@ namespace JetBrains.Annotations
     /// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcTemplateAttribute : Attribute
+    public sealed class AspMvcTemplateAttribute : Attribute
     {
     }
 
@@ -249,7 +249,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Controller.View(Object)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcViewAttribute : Attribute
+    public sealed class AspMvcViewAttribute : Attribute
     {
     }
 
@@ -258,7 +258,7 @@ namespace JetBrains.Annotations
     /// is an MVC view component name.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcViewComponentAttribute : Attribute
+    public sealed class AspMvcViewComponentAttribute : Attribute
     {
     }
 
@@ -267,12 +267,12 @@ namespace JetBrains.Annotations
     /// is an MVC view component view. If applied to a method, the MVC view component view name is default.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcViewComponentViewAttribute : Attribute
+    public sealed class AspMvcViewComponentViewAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspMvcViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcViewLocationFormatAttribute : Attribute
     {
         [NotNull]
         public string Format { get; private set; }
@@ -284,7 +284,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspRequiredAttributeAttribute : Attribute
+    public sealed class AspRequiredAttributeAttribute : Attribute
     {
         [NotNull]
         public string Attribute { get; private set; }
@@ -296,7 +296,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AspTypePropertyAttribute : Attribute
+    public sealed class AspTypePropertyAttribute : Attribute
     {
         public bool CreateConstructorReferences { get; private set; }
 
@@ -312,7 +312,7 @@ namespace JetBrains.Annotations
     /// the attribute is the assertion type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AssertionConditionAttribute : Attribute
+    public sealed class AssertionConditionAttribute : Attribute
     {
         public AssertionConditionType ConditionType { get; private set; }
 
@@ -344,7 +344,7 @@ namespace JetBrains.Annotations
     /// <see cref="AssertionConditionAttribute" /> attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class AssertionMethodAttribute : Attribute
+    public sealed class AssertionMethodAttribute : Attribute
     {
     }
 
@@ -360,7 +360,7 @@ namespace JetBrains.Annotations
     /// class MyComponent : IComponent { }
     /// </code></example>
     [BaseTypeRequired(typeof(Attribute)), AttributeUsage(AttributeTargets.Class, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class BaseTypeRequiredAttribute : Attribute
+    public sealed class BaseTypeRequiredAttribute : Attribute
     {
         [NotNull]
         public Type BaseType { get; private set; }
@@ -384,7 +384,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Interface | AttributeTargets.Parameter | AttributeTargets.Delegate | AttributeTargets.GenericParameter)]
-    internal sealed class CanBeNullAttribute : Attribute
+    public sealed class CanBeNullAttribute : Attribute
     {
     }
 
@@ -409,7 +409,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class CannotApplyEqualityOperatorAttribute : Attribute
+    public sealed class CannotApplyEqualityOperatorAttribute : Attribute
     {
     }
 
@@ -418,7 +418,7 @@ namespace JetBrains.Annotations
     /// over collection type affects content of the collection.
     /// </summary>
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class CollectionAccessAttribute : Attribute
+    public sealed class CollectionAccessAttribute : Attribute
     {
         public CollectionAccessType CollectionAccessType { get; private set; }
 
@@ -486,14 +486,15 @@ namespace JetBrains.Annotations
     /// </code></item>
     /// </list></examples>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class ContractAnnotationAttribute : Attribute
+    public sealed class ContractAnnotationAttribute : Attribute
     {
         [NotNull]
         public string Contract { get; private set; }
 
         public bool ForceFullStates { get; private set; }
 
-        public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false)
+        public ContractAnnotationAttribute([NotNull] string contract)
+            : this(contract, false)
         {
         }
 
@@ -505,7 +506,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class HtmlAttributeValueAttribute : Attribute
+    public sealed class HtmlAttributeValueAttribute : Attribute
     {
         [NotNull]
         public string Name { get; private set; }
@@ -517,7 +518,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class HtmlElementAttributesAttribute : Attribute
+    public sealed class HtmlElementAttributesAttribute : Attribute
     {
         [CanBeNull]
         public string Name { get; private set; }
@@ -570,7 +571,7 @@ namespace JetBrains.Annotations
     /// If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class InstantHandleAttribute : Attribute
+    public sealed class InstantHandleAttribute : Attribute
     {
     }
 
@@ -586,7 +587,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Parameter)]
-    internal sealed class InvokerParameterNameAttribute : Attribute
+    public sealed class InvokerParameterNameAttribute : Attribute
     {
     }
 
@@ -596,7 +597,7 @@ namespace JetBrains.Annotations
     /// or of the Lazy.Value property can be null.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class ItemCanBeNullAttribute : Attribute
+    public sealed class ItemCanBeNullAttribute : Attribute
     {
     }
 
@@ -606,7 +607,7 @@ namespace JetBrains.Annotations
     /// or of the Lazy.Value property can never be null.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate)]
-    internal sealed class ItemNotNullAttribute : Attribute
+    public sealed class ItemNotNullAttribute : Attribute
     {
     }
 
@@ -616,7 +617,7 @@ namespace JetBrains.Annotations
     /// of delegate type by analyzing LINQ method chains.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class LinqTunnelAttribute : Attribute
+    public sealed class LinqTunnelAttribute : Attribute
     {
     }
 
@@ -630,11 +631,12 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.All), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class LocalizationRequiredAttribute : Attribute
+    public sealed class LocalizationRequiredAttribute : Attribute
     {
         public bool Required { get; private set; }
 
-        public LocalizationRequiredAttribute() : this(true)
+        public LocalizationRequiredAttribute()
+            : this(true)
         {
         }
 
@@ -673,7 +675,7 @@ namespace JetBrains.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class MacroAttribute : Attribute
+    public sealed class MacroAttribute : Attribute
     {
         /// <summary>
         /// Allows specifying a macro that will be executed for a <see cref="SourceTemplateAttribute">source template</see>
@@ -705,7 +707,7 @@ namespace JetBrains.Annotations
     /// as unused (as well as by other usage inspections)
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.GenericParameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class MeansImplicitUseAttribute : Attribute
+    public sealed class MeansImplicitUseAttribute : Attribute
     {
         [UsedImplicitly]
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
@@ -713,15 +715,18 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public ImplicitUseTargetFlags TargetFlags { get; private set; }
 
-        public MeansImplicitUseAttribute() : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+        public MeansImplicitUseAttribute()
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags) : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
+            : this(useKindFlags, ImplicitUseTargetFlags.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags) : this(ImplicitUseKindFlags.Default, targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
+            : this(ImplicitUseKindFlags.Default, targetFlags)
         {
         }
 
@@ -736,7 +741,7 @@ namespace JetBrains.Annotations
     /// Indicates that the return value of method invocation must be used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class MustUseReturnValueAttribute : Attribute
+    public sealed class MustUseReturnValueAttribute : Attribute
     {
         [CanBeNull]
         public string Justification { get; private set; }
@@ -755,7 +760,7 @@ namespace JetBrains.Annotations
     /// Indicates that IEnumerable, passed as parameter, is not enumerated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class NoEnumerationAttribute : Attribute
+    public sealed class NoEnumerationAttribute : Attribute
     {
     }
 
@@ -766,7 +771,7 @@ namespace JetBrains.Annotations
     /// The attribute must be mentioned in your member reordering patterns
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class NoReorderAttribute : Attribute
+    public sealed class NoReorderAttribute : Attribute
     {
     }
 
@@ -809,7 +814,7 @@ namespace JetBrains.Annotations
     /// </list>
     /// </example>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
+    public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
         [CanBeNull]
         public string ParameterName { get; private set; }
@@ -833,7 +838,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Interface | AttributeTargets.Parameter | AttributeTargets.Delegate | AttributeTargets.GenericParameter)]
-    internal sealed class NotNullAttribute : Attribute
+    public sealed class NotNullAttribute : Attribute
     {
     }
 
@@ -842,7 +847,7 @@ namespace JetBrains.Annotations
     /// Path can be relative or absolute, starting from web root (~).
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class PathReferenceAttribute : Attribute
+    public sealed class PathReferenceAttribute : Attribute
     {
         [CanBeNull]
         public string BasePath { get; private set; }
@@ -873,7 +878,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Interface | AttributeTargets.Parameter | AttributeTargets.GenericParameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class ProvidesContextAttribute : Attribute
+    public sealed class ProvidesContextAttribute : Attribute
     {
     }
 
@@ -882,7 +887,7 @@ namespace JetBrains.Annotations
     /// which should not be removed and so is treated as used.
     /// </summary>
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class PublicAPIAttribute : Attribute
+    public sealed class PublicAPIAttribute : Attribute
     {
         [CanBeNull]
         public string Comment { get; private set; }
@@ -909,12 +914,12 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class PureAttribute : Attribute
+    public sealed class PureAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorDirectiveAttribute : Attribute
+    public sealed class RazorDirectiveAttribute : Attribute
     {
         [NotNull]
         public string Directive { get; private set; }
@@ -926,12 +931,12 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorHelperCommonAttribute : Attribute
+    public sealed class RazorHelperCommonAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorImportNamespaceAttribute : Attribute
+    public sealed class RazorImportNamespaceAttribute : Attribute
     {
         [NotNull]
         public string Name { get; private set; }
@@ -943,7 +948,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorInjectionAttribute : Attribute
+    public sealed class RazorInjectionAttribute : Attribute
     {
         [NotNull]
         public string Type { get; private set; }
@@ -959,12 +964,12 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorLayoutAttribute : Attribute
+    public sealed class RazorLayoutAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorPageBaseTypeAttribute : Attribute
+    public sealed class RazorPageBaseTypeAttribute : Attribute
     {
         [NotNull]
         public string BaseType { get; private set; }
@@ -990,22 +995,22 @@ namespace JetBrains.Annotations
     /// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorSectionAttribute : Attribute
+    public sealed class RazorSectionAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorWriteLiteralMethodAttribute : Attribute
+    public sealed class RazorWriteLiteralMethodAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorWriteMethodAttribute : Attribute
+    public sealed class RazorWriteMethodAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RazorWriteMethodParameterAttribute : Attribute
+    public sealed class RazorWriteMethodParameterAttribute : Attribute
     {
     }
 
@@ -1013,7 +1018,7 @@ namespace JetBrains.Annotations
     /// Indicates that parameter is regular expression pattern.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class RegexPatternAttribute : Attribute
+    public sealed class RegexPatternAttribute : Attribute
     {
     }
 
@@ -1041,7 +1046,7 @@ namespace JetBrains.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class SourceTemplateAttribute : Attribute
+    public sealed class SourceTemplateAttribute : Attribute
     {
     }
 
@@ -1059,7 +1064,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Delegate), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class StringFormatMethodAttribute : Attribute
+    public sealed class StringFormatMethodAttribute : Attribute
     {
         [NotNull]
         public string FormatParameterName { get; private set; }
@@ -1078,7 +1083,7 @@ namespace JetBrains.Annotations
     /// For example, it could unconditionally throw exception.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method), Conditional("JETBRAINS_ANNOTATIONS"), Obsolete("Use [ContractAnnotation('=> halt')] instead")]
-    internal sealed class TerminatesProgramAttribute : Attribute
+    public sealed class TerminatesProgramAttribute : Attribute
     {
     }
 
@@ -1087,21 +1092,24 @@ namespace JetBrains.Annotations
     /// so this symbol will not be marked as unused (as well as by other usage inspections).
     /// </summary>
     [AttributeUsage(AttributeTargets.All), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class UsedImplicitlyAttribute : Attribute
+    public sealed class UsedImplicitlyAttribute : Attribute
     {
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
 
         public ImplicitUseTargetFlags TargetFlags { get; private set; }
 
-        public UsedImplicitlyAttribute() : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+        public UsedImplicitlyAttribute()
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags) : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
+            : this(useKindFlags, ImplicitUseTargetFlags.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags) : this(ImplicitUseKindFlags.Default, targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
+            : this(ImplicitUseKindFlags.Default, targetFlags)
         {
         }
 
@@ -1117,7 +1125,7 @@ namespace JetBrains.Annotations
     /// Specify fields of which type should be used as values for this parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = true), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class ValueProviderAttribute : Attribute
+    public sealed class ValueProviderAttribute : Attribute
     {
         [NotNull]
         public string Name { get; private set; }
@@ -1138,7 +1146,7 @@ namespace JetBrains.Annotations
     /// marked with the <see cref="XamlItemsControlAttribute" /> attribute.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Property), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class XamlItemBindingOfItemsControlAttribute : Attribute
+    public sealed class XamlItemBindingOfItemsControlAttribute : Attribute
     {
     }
 
@@ -1147,7 +1155,7 @@ namespace JetBrains.Annotations
     /// as <c>ItemsControl</c>-derived type, to enable inner items <c>DataContext</c> type resolve.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class), Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class XamlItemsControlAttribute : Attribute
+    public sealed class XamlItemsControlAttribute : Attribute
     {
     }
 }

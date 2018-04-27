@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using N26.Json;
 using N26.Utilities;
@@ -50,7 +51,8 @@ namespace N26.Models
 
     #endregion
 
-    public class Card : N26Model<Card>
+    [N26Model("api/v2/cards", typeof(ImmutableList<>))]
+    public sealed class Card : N26Model<Card>
     {
         [CanBeNull]
         public object PublicToken { get; }
@@ -62,9 +64,9 @@ namespace N26.Models
         public DateTime ExpirationDate { get; }
         [JsonRequired]
         public CardType CardType { get; }
-        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalCardStatus>))]
+        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalCardStatus>), true)]
         public CardStatus Status { get; }
-        [JsonConverter(typeof(StringEnumConverter<InternalCardProduct?>)), CanBeNull]
+        [JsonConverter(typeof(StringEnumConverter<InternalCardProduct?>), true), CanBeNull]
         public CardProduct? CardProduct { get; }
         [JsonRequired]
         public CardProductType CardProductType { get; }
@@ -93,34 +95,43 @@ namespace N26.Models
         [JsonRequired]
         public bool ApplePayEligible { get; }
         [JsonRequired]
+        public bool GooglePayEligible { get; }
+        [CanBeNull]
+        public object Design { get; }
+        [CanBeNull]
+        public object OrderId { get; }
+        [JsonRequired]
         public bool MptsCard { get; }
 
         [JsonConstructor]
         internal Card(
-            IN26Client n26Client,
+            [NotNull] IClient client,
             Guid id,
-            object publicToken,
-            string pan,
-            string maskedPan,
+            [CanBeNull] object publicToken,
+            [CanBeNull] string pan,
+            [NotNull] string maskedPan,
             DateTime expirationDate,
             CardType cardType,
             CardStatus status,
-            CardProduct? cardProduct,
+            [CanBeNull] CardProduct? cardProduct,
             CardProductType cardProductType,
             DateTime pinDefined,
             DateTime cardActivated,
-            string userNameOnCard,
-            object exceetExpressCardDelivery,
-            object membership,
-            object exceetActualDeliveryDate,
-            object exceetExpressCardDeliveryEmailSent,
-            object exceetCardStatus,
-            object exceetExpectedDeliveryDate,
-            object exceetExpressCardDeliveryTrackingId,
-            object cardSettingsId,
+            [NotNull] string userNameOnCard,
+            [CanBeNull] object exceetExpressCardDelivery,
+            [CanBeNull] object membership,
+            [CanBeNull] object exceetActualDeliveryDate,
+            [CanBeNull] object exceetExpressCardDeliveryEmailSent,
+            [CanBeNull] object exceetCardStatus,
+            [CanBeNull] object exceetExpectedDeliveryDate,
+            [CanBeNull] object exceetExpressCardDeliveryTrackingId,
+            [CanBeNull] object cardSettingsId,
             bool applePayEligible,
+            bool googlePayEligible,
+            object design,
+            object orderId,
             bool mptsCard)
-            : base(n26Client, id)
+            : base(client, id)
         {
 #if DEBUG
             if (publicToken != null) throw new NotImplementedException();
@@ -157,6 +168,9 @@ namespace N26.Models
             ExceetExpressCardDeliveryTrackingId = exceetExpressCardDeliveryTrackingId;
             CardSettingsId = cardSettingsId;
             ApplePayEligible = applePayEligible;
+            GooglePayEligible = googlePayEligible;
+            Design = design;
+            OrderId = orderId;
             MptsCard = mptsCard;
         }
 

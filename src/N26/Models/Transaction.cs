@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using N26.Json;
 using N26.Utilities;
@@ -27,11 +28,12 @@ namespace N26.Models
 
     #endregion
 
-    public class Transaction : N26Model<Transaction>
+    [N26Model("api/smrt/transactions", typeof(ImmutableList<>))]
+    public sealed class Transaction : N26Model<Transaction>
     {
         [JsonRequired]
         public Guid UserId { get; }
-        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalTransactionType>))]
+        [JsonRequired, JsonConverter(typeof(StringEnumConverter<InternalTransactionType>), true)]
         public TransactionType Type { get; }
         [JsonRequired]
         public decimal Amount { get; }
@@ -102,44 +104,44 @@ namespace N26.Models
 
         [JsonConstructor]
         internal Transaction(
-            IN26Client n26Client,
+            [NotNull] IClient client,
             Guid id,
             Guid userId,
             TransactionType type,
             decimal amount,
             Currency currencyCode,
-            decimal? originalAmount,
-            Currency? originalCurrency,
-            decimal? exchangeRate,
-            string merchantCity,
+            [CanBeNull] decimal? originalAmount,
+            [CanBeNull] Currency? originalCurrency,
+            [CanBeNull] decimal? exchangeRate,
+            [CanBeNull] string merchantCity,
             DateTime visibleTS,
-            int? mcc,
-            int? mccGroup,
-            string merchantName,
+            [CanBeNull] int? mcc,
+            [CanBeNull] int? mccGroup,
+            [CanBeNull] string merchantName,
             bool recurring,
-            string partnerBic,
-            string partnerBcn,
-            bool? partnerAccountIsSepa,
-            string partnerBankName,
-            string partnerName,
+            [CanBeNull] string partnerBic,
+            [CanBeNull] string partnerBcn,
+            [CanBeNull] bool? partnerAccountIsSepa,
+            [CanBeNull] string partnerBankName,
+            [CanBeNull] string partnerName,
             Guid accountId,
-            string partnerIban,
-            string partnerAccountBan,
-            string category,
-            Guid? cardId,
-            string referenceText,
-            DateTime? userAccepted,
+            [CanBeNull] string partnerIban,
+            [CanBeNull] string partnerAccountBan,
+            [NotNull] string category,
+            [CanBeNull] Guid? cardId,
+            [CanBeNull] string referenceText,
+            [CanBeNull] DateTime? userAccepted,
             DateTime userCertified,
             bool pending,
             TransactionNature transactionNature,
-            string referenceToOriginalOperation,
-            Guid? smartContactId,
+            [CanBeNull] string referenceToOriginalOperation,
+            [CanBeNull] Guid? smartContactId,
             DateTime createdTS,
-            int? merchantCountry,
+            [CanBeNull] int? merchantCountry,
             Guid smartLinkId,
             Guid linkId,
             DateTime confirmed)
-            : base(n26Client, id)
+            : base(client, id)
         {
             Guard.IsNotNullOrEmpty(category, nameof(category));
             UserId = userId;

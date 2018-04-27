@@ -7,7 +7,8 @@ namespace N26.Models
 {
     public enum Gender { Male, Female }
 
-    public class Me : N26Model<Me>
+    [N26Model("api/me")]
+    public sealed class Me : N26Model<Me>
     {
         [JsonRequired, NotNull]
         public string Email { get; }
@@ -35,28 +36,28 @@ namespace N26.Models
         public Guid ShadowUserId { get; }
         [JsonRequired]
         public bool TransferWiseTermsAccepted { get; }
-        [JsonRequired, NotNull]
-        public string IdNowToken { get; }
+        //[JsonRequired, NotNull]
+        //public string IdNowToken { get; }
 
         [JsonConstructor]
         internal Me(
-            IN26Client n26Client,
+            [NotNull] IClient client,
             Guid id,
-            string email,
-            string firstName,
-            string lastName,
-            string kycFirstName,
-            string kycLastName,
-            string title,
+            [NotNull] string email,
+            [NotNull] string firstName,
+            [NotNull] string lastName,
+            [NotNull] string kycFirstName,
+            [NotNull] string kycLastName,
+            [CanBeNull] string title,
             Gender gender,
             DateTime birthDate,
             bool signupCompleted,
-            string nationality,
-            string mobilePhoneNumber,
+            [NotNull] string nationality,
+            [NotNull] string mobilePhoneNumber,
             Guid shadowUserId,
-            bool transferWiseTermsAccepted,
-            string idNowToken)
-            : base(n26Client, id)
+            bool transferWiseTermsAccepted)
+            //[NotNull] string idNowToken)
+            : base(client, id)
         {
             Guard.IsNotNullOrEmpty(email, nameof(email));
             Guard.IsNotNullOrEmpty(firstName, nameof(firstName));
@@ -65,7 +66,7 @@ namespace N26.Models
             Guard.IsNotNullOrEmpty(kycLastName, nameof(kycLastName));
             Guard.IsNotNullOrEmpty(nationality, nameof(nationality));
             Guard.IsNotNullOrEmpty(mobilePhoneNumber, nameof(mobilePhoneNumber));
-            Guard.IsNotNullOrEmpty(idNowToken, nameof(idNowToken));
+            //Guard.IsNotNullOrEmpty(idNowToken, nameof(idNowToken));
             Email = email;
             FirstName = firstName;
             LastName = lastName;
@@ -79,7 +80,7 @@ namespace N26.Models
             MobilePhoneNumber = mobilePhoneNumber;
             ShadowUserId = shadowUserId;
             TransferWiseTermsAccepted = transferWiseTermsAccepted;
-            IdNowToken = idNowToken;
+            //IdNowToken = idNowToken;
         }
 
         [NotNull]

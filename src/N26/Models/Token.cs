@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using N26.Json;
 using Newtonsoft.Json;
 
 namespace N26.Models
@@ -8,19 +7,20 @@ namespace N26.Models
     public enum TokenType { Bearer }
 
     [Flags]
-    public enum TokenScope { Read = 1 << 0, Trust = 1 << 1, Write = 1 << 2 }
+    public enum TokenScope { None = 0, Read = 1 << 0, Trust = 1 << 1, Write = 1 << 2 }
 
-    public class Token : IEquatable<Token>
+    [N26Model("oauth/token")]
+    public sealed class Token : IEquatable<Token>
     {
-        [JsonProperty("access_token", Required = Required.Always)]
+        [JsonProperty("access_token"), JsonRequired]
         public Guid AccessToken { get; }
-        [JsonProperty("token_type", Required = Required.Always)]
+        [JsonProperty("token_type"), JsonRequired]
         public TokenType TokenType { get; }
-        [JsonProperty("refresh_token", Required = Required.Always)]
+        [JsonProperty("refresh_token"), JsonRequired]
         public Guid RefreshToken { get; }
-        [JsonProperty("expires_in", Required = Required.Always)]
+        [JsonProperty("expires_in"), JsonRequired]
         public TimeSpan ExpiresIn { get; }
-        [JsonProperty("scope", Required = Required.Always), JsonConverter(typeof(StringFlagsEnumConverter))]
+        [JsonProperty("scope"), JsonRequired]
         public TokenScope Scope { get; }
 
         [JsonConstructor]
